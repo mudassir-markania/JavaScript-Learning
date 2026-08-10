@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to JavaScript</title>
+    <!-- Reveal.js basic styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <!-- Reveal.js theme: night (dark theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Base typography */
+        .reveal {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            letter-spacing: 0.5px;
+            font-size: 38px; /* Slightly decreased base font size */
+        }
+        
+        /* Body text and list items */
+        .reveal p, .reveal li {
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+        /* Custom styles to override default uppercase titles */
+        .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+            text-transform: none;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+        
+        .reveal h1 { font-size: 2.7em !important; }
+        .reveal h2 { font-size: 2em !important; }
+
+        /* Gradient Text for Main Headings */
+        .reveal h1 {
+            background: linear-gradient(45deg, #8a2be2, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+        }
+
+        .reveal h2 {
+            background: linear-gradient(45deg, #00d4ff, #8a2be2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Bullet Points */
+        .reveal ul {
+            list-style-type: none;
+        }
+        .reveal ul li::before {
+            content: '▹';
+            color: #00d4ff;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            text-shadow: 0 0 10px #00d4ff;
+        }
+        
+        /* Left and Right Side Design Elements */
+        .side-design {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            z-index: 1000;
+            pointer-events: none; /* Let clicks pass through to controls */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .side-design-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(138, 43, 226, 0.15), transparent);
+            border-left: 4px solid rgba(138, 43, 226, 0.8);
+            box-shadow: inset 15px 0 30px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .side-design-right {
+            right: 0;
+            background: linear-gradient(to left, rgba(0, 212, 255, 0.15), transparent);
+            border-right: 4px solid rgba(0, 212, 255, 0.8);
+            box-shadow: inset -15px 0 30px -10px rgba(0, 212, 255, 0.3);
+        }
+        
+        /* Aesthetic glowing elements inside the sides */
+        .side-glow-line {
+            width: 2px;
+            height: 120px;
+            background: #fff;
+            border-radius: 4px;
+            animation: pulse-line 3s infinite alternate ease-in-out;
+        }
+
+        .side-glow-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            animation: float-dot 4s infinite alternate ease-in-out;
+        }
+
+        /* Left Side Colors */
+        .side-design-left .side-glow-line, .side-design-left .side-glow-dot {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+        
+        /* Right Side Colors */
+        .side-design-right .side-glow-line, .side-design-right .side-glow-dot {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+
+        /* Animations */
+        @keyframes pulse-line {
+            0% { opacity: 0.2; height: 60px; transform: scaleY(1); }
+            100% { opacity: 1; height: 160px; transform: scaleY(1.1); }
+        }
+
+        @keyframes float-dot {
+            0% { transform: translateY(20px) scale(0.8); opacity: 0.5; }
+            100% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+
+        /* Remove default Reveal.js image styling for logos */
+        .reveal section img.icon-logo {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+        }
+
+        /* Top and Bottom Edge Designs */
+        .edge-design {
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 60px;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edge-design-top {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(138, 43, 226, 0.15), transparent);
+            border-top: 4px solid rgba(138, 43, 226, 0.8);
+            box-shadow: inset 0 15px 30px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .edge-design-bottom {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 212, 255, 0.15), transparent);
+            border-bottom: 4px solid rgba(0, 212, 255, 0.8);
+            box-shadow: inset 0 -15px 30px -10px rgba(0, 212, 255, 0.3);
+        }
+
+        .edge-glow-line-h {
+            height: 2px;
+            width: 150px;
+            background: #fff;
+            border-radius: 4px;
+            animation: sweep-line-h 4s infinite alternate ease-in-out;
+        }
+
+        .edge-design-top .edge-glow-line-h {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+
+        .edge-design-bottom .edge-glow-line-h {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+
+        @keyframes sweep-line-h {
+            0% { transform: translateX(-40vw); opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { transform: translateX(40vw); opacity: 0.2; }
+        }
+
+        /* Background grid effect */
+        body {
+            background-color: #111;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+        /* Corner Designs */
+        .corner-design {
+            position: fixed;
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .corner-top-left {
+            top: 40px;
+            left: 40px;
+            border-top: 4px solid #8a2be2;
+            border-left: 4px solid #8a2be2;
+            box-shadow: inset 10px 10px 20px -10px rgba(138, 43, 226, 0.3);
+            animation: corner-pulse-tl 4s infinite alternate ease-in-out;
+        }
+
+        .corner-top-right {
+            top: 40px;
+            right: 40px;
+            border-top: 4px solid #00d4ff;
+            border-right: 4px solid #00d4ff;
+            box-shadow: inset -10px 10px 20px -10px rgba(0, 212, 255, 0.3);
+            animation: corner-pulse-tr 4s infinite alternate ease-in-out;
+        }
+
+        .corner-bottom-left {
+            bottom: 40px;
+            left: 40px;
+            border-bottom: 4px solid #8a2be2;
+            border-left: 4px solid #8a2be2;
+            box-shadow: inset 10px -10px 20px -10px rgba(138, 43, 226, 0.3);
+            animation: corner-pulse-bl 4s infinite alternate ease-in-out;
+        }
+
+        .corner-bottom-right {
+            bottom: 40px;
+            right: 40px;
+            border-bottom: 4px solid #00d4ff;
+            border-right: 4px solid #00d4ff;
+            box-shadow: inset -10px -10px 20px -10px rgba(0, 212, 255, 0.3);
+            animation: corner-pulse-br 4s infinite alternate ease-in-out;
+        }
+        
+        .corner-design::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .corner-top-left::before {
+            top: -6px;
+            left: -6px;
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2;
+        }
+
+        .corner-top-right::before {
+            top: -6px;
+            right: -6px;
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;
+        }
+
+        .corner-bottom-left::before {
+            bottom: -6px;
+            left: -6px;
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2;
+        }
+
+        .corner-bottom-right::before {
+            bottom: -6px;
+            right: -6px;
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;
+        }
+
+        @keyframes corner-pulse-tl {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+            100% { transform: scale(1.1) translate(-5px, -5px); opacity: 1; }
+        }
+
+        @keyframes corner-pulse-tr {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+            100% { transform: scale(1.1) translate(5px, -5px); opacity: 1; }
+        }
+
+        @keyframes corner-pulse-bl {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+            100% { transform: scale(1.1) translate(-5px, 5px); opacity: 1; }
+        }
+
+        @keyframes corner-pulse-br {
+            0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+            100% { transform: scale(1.1) translate(5px, 5px); opacity: 1; }
+        }
+
+        /* Center the navigation controls at the bottom */
+        .reveal .controls {
+            right: auto !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            bottom: 20px !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Edge Designs (Top and Bottom) -->
+    <div class="edge-design edge-design-top">
+        <div class="edge-glow-line-h"></div>
+    </div>
+    <div class="edge-design edge-design-bottom">
+        <div class="edge-glow-line-h"></div>
+    </div>
+
+    <!-- Corner Designs -->
+    <div class="corner-design corner-top-left"></div>
+    <div class="corner-design corner-top-right"></div>
+    <div class="corner-design corner-bottom-left"></div>
+    <div class="corner-design corner-bottom-right"></div>
+
+    <!-- Side Designs -->
+    <div class="side-design side-design-left">
+        <div class="side-glow-dot" style="animation-delay: 0s;"></div>
+        <div class="side-glow-line" style="animation-delay: 0.5s;"></div>
+        <div class="side-glow-dot" style="animation-delay: 1s;"></div>
+    </div>
+    <div class="side-design side-design-right">
+        <div class="side-glow-dot" style="animation-delay: 1s;"></div>
+        <div class="side-glow-line" style="animation-delay: 0s;"></div>
+        <div class="side-glow-dot" style="animation-delay: 0.5s;"></div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1: Title Slide -->
+            <section>
+                <h1>Introduction to JavaScript</h1>
+                <p>The Language of the Web</p>
+            </section>
+
+            <!-- Slide 2 -->
+            <section>
+                <h2>What can you build with JS?</h2>
+                <ul>
+                    <li class="fragment"><b>Frontend Development:</b> Interactive UIs (React, Vue)</li>
+                    <li class="fragment"><b>Backend Development:</b> Server logic (Node.js)</li>
+                    <li class="fragment"><b>Mobile Apps:</b> Cross-platform native apps (React Native)</li>
+                    <li class="fragment"><b>Desktop Apps:</b> Standalone apps (Electron)</li>
+                    <li class="fragment"><b>Game Development:</b> Browser-based gaming (Phaser)</li>
+                </ul>
+            </section>
+
+            <!-- Slide 3: Real World Examples -->
+            <section>
+                <h2>Real-World Examples</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 0.8em; margin-top: 40px;">
+                    <!-- Frontend -->
+                    <div class="fragment" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #00d4ff;">
+                        <h4 style="margin: 0 0 15px 0; color: #fff;">Frontend</h4>
+                        <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/facebook.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/netflix.svg" style="height: 45px; filter: invert(0.5) sepia(1) saturate(5) hue-rotate(330deg);" title="Netflix">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/airbnb.svg" style="height: 45px; filter: invert(1);">
+                        </div>
+                    </div>
+                    
+                    <!-- Backend -->
+                    <div class="fragment" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #8a2be2;">
+                        <h4 style="margin: 0 0 15px 0; color: #fff;">Backend (Node.js)</h4>
+                        <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/nodedotjs.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/uber.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/paypal.svg" style="height: 45px; filter: invert(1);">
+                        </div>
+                    </div>
+
+                    <!-- Mobile -->
+                    <div class="fragment" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #8a2be2;">
+                        <h4 style="margin: 0 0 15px 0; color: #fff;">Mobile (React Native)</h4>
+                        <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/instagram.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/discord.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/skype.svg" style="height: 45px; filter: invert(1);">
+                        </div>
+                    </div>
+
+                    <!-- Desktop -->
+                    <div class="fragment" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #00d4ff;">
+                        <h4 style="margin: 0 0 15px 0; color: #fff;">Desktop (Electron)</h4>
+                        <div style="display: flex; justify-content: center; gap: 20px; align-items: center;">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/visualstudiocode.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/slack.svg" style="height: 45px; filter: invert(1);">
+                            <img class="icon-logo" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/spotify.svg" style="height: 45px; filter: invert(1);">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: History -->
+            <section>
+                <h2>The History of JavaScript</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 2; font-size: 0.9em;">
+                        <li class="fragment"><b>1995:</b> The web was entirely static. Netscape Communications wanted to add dynamic behavior.</li>
+                        <li class="fragment"><b>Brendan Eich</b> was hired to embed a scripting language into Netscape Navigator.</li>
+                        <li class="fragment">He famously wrote the first prototype in just <b>10 days</b>!</li>
+                        <li class="fragment"><b>Name evolution:</b> Mocha &rarr; LiveScript &rarr; <b>JavaScript</b>.</li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/javascript.svg" style="height: 120px; filter: invert(0.8) sepia(1) saturate(5) hue-rotate(10deg);">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: ECMAScript -->
+            <section>
+                <h2>ECMAScript Standardization</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 2; font-size: 0.85em;">
+                        <li class="fragment">Netscape submitted JS to ECMA International (1996) to create a standard specification, called <b>ECMAScript</b>.</li>
+                        <li class="fragment"><b>ES1 (1997)</b> - First Edition.</li>
+                        <li class="fragment"><b>ES5 (2009)</b> - Brought JSON support, strict mode, and array methods.</li>
+                        <li class="fragment"><b>ES6 / ES2015</b> - The biggest update ever (let/const, classes, arrow functions, promises).</li>
+                        <li class="fragment"><b>ES2016 - Present</b> - Annual releases with incremental updates.</li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/javascript.svg" style="height: 120px; filter: invert(1);">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: V8 Engine -->
+            <section>
+                <h2>The Chrome V8 Engine</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 2; font-size: 0.9em;">
+                        <li class="fragment">Early JavaScript was considered slow because it was purely interpreted.</li>
+                        <li class="fragment">In 2008, Google released Chrome featuring the open-source <b>V8 Engine</b>.</li>
+                        <li class="fragment">V8 compiles JS directly to native machine code just-in-time (JIT compilation).</li>
+                        <li class="fragment">This drastically improved performance, paving the way for complex web apps!</li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/googlechrome.svg" style="height: 120px; filter: invert(1);">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Node.js -->
+            <section>
+                <h2>Node.js: JS Everywhere</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 2; font-size: 0.9em;">
+                        <li class="fragment"><b>2009: Ryan Dahl</b> realized V8 was so fast it could be used outside the browser.</li>
+                        <li class="fragment">He extracted V8, bound it to C++ APIs, added an event loop, and created <b>Node.js</b>.</li>
+                        <li class="fragment">This allowed developers to write <b>Server-side</b> JavaScript.</li>
+                        <li class="fragment">The same language could now be used for the entire full-stack!</li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/nodedotjs.svg" style="height: 120px; filter: invert(0.6) sepia(1) saturate(3) hue-rotate(70deg);">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Frameworks -->
+            <section>
+                <h2>The Framework Era</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 2; font-size: 0.85em;">
+                        <li class="fragment">As apps grew, writing vanilla JS became difficult to maintain.</li>
+                        <li class="fragment"><b>Early 2010s:</b> AngularJS & Ember brought MVC concepts to the frontend.</li>
+                        <li class="fragment"><b>2013-2014:</b> React (Facebook) & Vue.js popularized component-based architecture.</li>
+                        <li class="fragment"><b>Modern Era:</b> Meta-frameworks like Next.js, Nuxt, and SvelteKit blur the lines between frontend and backend.</li>
+                    </ul>
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 20px; align-items: center;">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/react.svg" style="height: 60px; filter: invert(0.6) sepia(1) saturate(5) hue-rotate(160deg);">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/vuedotjs.svg" style="height: 60px; filter: invert(0.6) sepia(1) saturate(3) hue-rotate(100deg);">
+                        <img class="icon-logo fragment" src="https://cdn.jsdelivr.net/npm/simple-icons/icons/nextdotjs.svg" style="height: 60px; filter: invert(1);">
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Slide 9: V8 Concepts -->
+            <section>
+                <h2>V8 Engine Concepts</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 1; font-size: 0.8em;">
+                        <li class="fragment"><b>Parser:</b> Converts JS source code into an Abstract Syntax Tree (AST).</li>
+                        <li class="fragment"><b>Ignition:</b> Generates unoptimized bytecode from the AST.</li>
+                        <li class="fragment"><b>TurboFan:</b> Takes frequently executed bytecode and optimizes it into blazing-fast machine code.</li>
+                        <li class="fragment"><b>Memory Heap:</b> Where dynamic memory allocation happens.</li>
+                        <li class="fragment"><b>Garbage Collector:</b> Automatically frees up unused memory.</li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;" class="fragment">
+                        <img src="C:/Users/Mudassir Markania/.gemini/antigravity-ide/brain/03802a70-8565-47a9-a42d-22bd10dfd502/v8_concepts_diagram_1786386199659.png" style="width: 100%; border-radius: 10px; border: 2px solid #8a2be2;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Execution Context -->
+            <section>
+                <h2>Execution Context</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 1; font-size: 0.8em;">
+                        <li class="fragment">An abstract environment where JS code is evaluated.</li>
+                        <li class="fragment"><b>Global Context:</b> Default environment. Creates `window` and `this`.</li>
+                        <li class="fragment"><b>Function Context:</b> Created brand new every time a function is called.</li>
+                        <li class="fragment"><b>Two Phases:</b> 
+                            <br>&nbsp;&nbsp;&nbsp;1. <i>Memory Creation</i> (Variables hoisted)
+                            <br>&nbsp;&nbsp;&nbsp;2. <i>Execution</i> (Code runs line-by-line)
+                        </li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;" class="fragment">
+                        <img src="C:/Users/Mudassir Markania/.gemini/antigravity-ide/brain/03802a70-8565-47a9-a42d-22bd10dfd502/execution_context_diagram_1786386260732.png" style="width: 100%; border-radius: 10px; border: 2px solid #00d4ff;">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 11: Call Stack -->
+            <section>
+                <h2>The Call Stack</h2>
+                <div style="display: flex; align-items: center; gap: 40px; text-align: left;">
+                    <ul style="flex: 1; font-size: 0.8em;">
+                        <li class="fragment">JavaScript is single-threaded; it has only <b>one</b> Call Stack.</li>
+                        <li class="fragment">It operates on a <b>LIFO</b> (Last In, First Out) principle.</li>
+                        <li class="fragment">When called, a function is <b>pushed</b> to the stack.</li>
+                        <li class="fragment">When returned, it gets <b>popped</b> off the stack.</li>
+                        <li class="fragment"><i>Stack Overflow</i> occurs with too many calls!</li>
+                    </ul>
+                    <div style="flex: 1; text-align: center;" class="fragment">
+                        <img src="C:/Users/Mudassir Markania/.gemini/antigravity-ide/brain/03802a70-8565-47a9-a42d-22bd10dfd502/call_stack_diagram_1786386370769.png" style="width: 100%; border-radius: 10px; border: 2px solid #8a2be2;">
+                    </div>
+                </div>
+            </section>
+            <!-- Slide 12: Syllabus -->
+            <section>
+                <h2>The Syllabus</h2>
+                <p style="font-size: 0.55em; color: #aaa; margin-bottom: 30px;">Our complete roadmap for mastering JavaScript</p>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 10px; font-size: 0.5em; max-width: 900px; margin: 0 auto; font-weight: bold;">
+                    
+                    <!-- Group 1: Fundamentals (Purple) -->
+                    <span class="fragment" data-fragment-index="1" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; padding: 10px 15px; border-radius: 20px;">Basics</span>
+                    <span class="fragment" data-fragment-index="1" style="color: #8a2be2;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="1" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; padding: 10px 15px; border-radius: 20px;">Variables</span>
+                    <span class="fragment" data-fragment-index="1" style="color: #8a2be2;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="1" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; padding: 10px 15px; border-radius: 20px;">Data Types</span>
+                    <span class="fragment" data-fragment-index="1" style="color: #8a2be2;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="1" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; padding: 10px 15px; border-radius: 20px;">Operators</span>
+                    <span class="fragment" data-fragment-index="1" style="color: #8a2be2;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="1" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; padding: 10px 15px; border-radius: 20px;">Conditions</span>
+                    <span class="fragment" data-fragment-index="1" style="color: #8a2be2;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="1" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; padding: 10px 15px; border-radius: 20px;">Loops</span>
+                    <span class="fragment" data-fragment-index="2" style="color: #fff;">&rarr;</span>
+                    
+                    <!-- Group 2: Core (Cyan) -->
+                    <span class="fragment" data-fragment-index="2" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; padding: 10px 15px; border-radius: 20px;">Functions</span>
+                    <span class="fragment" data-fragment-index="2" style="color: #00d4ff;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="2" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; padding: 10px 15px; border-radius: 20px;">Arrays</span>
+                    <span class="fragment" data-fragment-index="2" style="color: #00d4ff;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="2" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; padding: 10px 15px; border-radius: 20px;">Objects</span>
+                    <span class="fragment" data-fragment-index="2" style="color: #00d4ff;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="2" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; padding: 10px 15px; border-radius: 20px;">DOM</span>
+                    <span class="fragment" data-fragment-index="2" style="color: #00d4ff;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="2" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; padding: 10px 15px; border-radius: 20px;">Events</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #fff;">&rarr;</span>
+
+                    <!-- Group 3: Advanced/Async (Pink) -->
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">Async JS</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">Promises</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">Async/Await</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">Fetch/API</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">OOP</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">ES6+</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">Modules</span>
+                    <span class="fragment" data-fragment-index="3" style="color: #ff69b4;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="3" style="background: rgba(255,105,180,0.2); border: 1px solid #ff69b4; padding: 10px 15px; border-radius: 20px;">Advanced JS</span>
+                    <span class="fragment" data-fragment-index="4" style="color: #fff;">&rarr;</span>
+
+                    <!-- Group 4: Beyond (Green) -->
+                    <span class="fragment" data-fragment-index="4" style="background: rgba(50,205,50,0.2); border: 1px solid #32cd32; padding: 10px 15px; border-radius: 20px;">Node.js</span>
+                    <span class="fragment" data-fragment-index="4" style="color: #32cd32;">&rarr;</span>
+                    <span class="fragment" data-fragment-index="4" style="background: rgba(50,205,50,0.4); border: 2px solid #32cd32; padding: 12px 20px; border-radius: 25px; box-shadow: 0 0 15px rgba(50,205,50,0.8); color: #fff;">Projects!</span>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true, // Enables URL hash routing for slides
+            slideNumber: true, // Shows slide numbers
+            controls: true, // Display controls
+            progress: true, // Display a presentation progress bar
+            transition: 'slide' // none/fade/slide/convex/concave/zoom
+        });
+    </script>
+</body>
+</html>
