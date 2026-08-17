@@ -198,12 +198,27 @@
             margin-top: 10px;
             display: block;
         }
+    
+        @media (max-width: 768px) {
+            body { flex-direction: column; height: auto; overflow: visible; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid var(--border-color); padding: 10px 0; }
+            .sidebar h2 { margin-bottom: 10px; }
+            .question-nav { display: flex; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; padding-bottom: 5px; }
+            .question-nav li { padding: 10px 15px; border-bottom: none; border-right: 1px solid var(--border-color); }
+            .question-nav li.active { border-left: none; border-bottom: 4px solid var(--accent-color); }
+            .main-content { padding: 15px; }
+            .question-title { font-size: 1.4rem; }
+            #code-editor { height: 300px; }
+            .terminal-container { height: 180px; }
+            .editor-toolbar { flex-direction: column; gap: 10px; align-items: flex-start; }
+            .run-btn { width: 100%; padding: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <a href="index.html" style="text-align: center; display: block; margin: 0 20px 20px 20px; padding: 10px; background-color: rgba(203, 166, 247, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color); border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">🏠 Go to Hub</a>
+        <a href="index.html" style="text-align: center; display: block; margin: 10px 20px;  padding: 10px; background-color: rgba(203, 166, 247, 0.1); border: 1px solid var(--accent-color); color: var(--accent-color); border-radius: 8px; text-decoration: none; font-weight: bold; transition: all 0.3s ease;">🏠 Go to Hub</a>
         <h2>JS Challenges</h2>
         <ul class="question-nav" id="nav-list">
             <!-- Populated by JS -->
