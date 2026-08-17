@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to JavaScript</title>
+    <!-- Reveal.js basic styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <!-- Reveal.js theme: night (dark theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Base typography */
+        .reveal {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            letter-spacing: 0.5px;
+            font-size: 38px;
+        }
+
+        /* Body text and list items */
+        .reveal p,
+        .reveal li {
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+        /* Custom styles to override default uppercase titles */
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4,
+        .reveal h5,
+        .reveal h6 {
+            text-transform: none;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .reveal h1 {
+            font-size: 2.7em !important;
+        }
+
+        .reveal h2 {
+            font-size: 2em !important;
+        }
+
+        /* Gradient Text for Main Headings */
+        .reveal h1 {
+            background: linear-gradient(45deg, #8a2be2, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+        }
+
+        .reveal h2 {
+            background: linear-gradient(45deg, #00d4ff, #8a2be2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Bullet Points */
+        .reveal ul {
+            list-style-type: none;
+        }
+
+        .reveal ul li::before {
+            content: '▹';
+            color: #00d4ff;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            text-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* Left and Right Side Design Elements */
+        .side-design {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .side-design-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(138, 43, 226, 0.15), transparent);
+            border-left: 4px solid rgba(138, 43, 226, 0.8);
+            box-shadow: inset 15px 0 30px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .side-design-right {
+            right: 0;
+            background: linear-gradient(to left, rgba(0, 212, 255, 0.15), transparent);
+            border-right: 4px solid rgba(0, 212, 255, 0.8);
+            box-shadow: inset -15px 0 30px -10px rgba(0, 212, 255, 0.3);
+        }
+
+        .side-glow-line {
+            width: 2px;
+            height: 120px;
+            background: #fff;
+            border-radius: 4px;
+            animation: pulse-line 3s infinite alternate ease-in-out;
+        }
+
+        .side-glow-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            animation: float-dot 4s infinite alternate ease-in-out;
+        }
+
+        .side-design-left .side-glow-line,
+        .side-design-left .side-glow-dot {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+
+        .side-design-right .side-glow-line,
+        .side-design-right .side-glow-dot {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+
+        @keyframes pulse-line {
+            0% { opacity: 0.2; height: 60px; transform: scaleY(1); }
+            100% { opacity: 1; height: 160px; transform: scaleY(1.1); }
+        }
+
+        @keyframes float-dot {
+            0% { transform: translateY(20px) scale(0.8); opacity: 0.5; }
+            100% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+
+        .reveal section img.icon-logo {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+        }
+
+        .edge-design {
+            position: fixed; left: 0; right: 0; height: 60px; z-index: 1000; pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .edge-design-top {
+            top: 0; background: linear-gradient(to bottom, rgba(138, 43, 226, 0.15), transparent);
+            border-top: 4px solid rgba(138, 43, 226, 0.8); box-shadow: inset 0 15px 30px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .edge-design-bottom {
+            bottom: 0; background: linear-gradient(to top, rgba(0, 212, 255, 0.15), transparent);
+            border-bottom: 4px solid rgba(0, 212, 255, 0.8); box-shadow: inset 0 -15px 30px -10px rgba(0, 212, 255, 0.3);
+        }
+
+        .edge-glow-line-h {
+            height: 2px; width: 150px; background: #fff; border-radius: 4px;
+            animation: sweep-line-h 4s infinite alternate ease-in-out;
+        }
+
+        .edge-design-top .edge-glow-line-h { box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2; }
+        .edge-design-bottom .edge-glow-line-h { box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff; }
+
+        @keyframes sweep-line-h {
+            0% { transform: translateX(-40vw); opacity: 0.2; }
+            50% { opacity: 1; }
+            100% { transform: translateX(40vw); opacity: 0.2; }
+        }
+
+        body {
+            background-color: #111;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+
+        .corner-design { position: fixed; width: 120px; height: 120px; z-index: 1000; pointer-events: none; }
+
+        .corner-top-left {
+            top: 40px; left: 40px; border-top: 4px solid #8a2be2; border-left: 4px solid #8a2be2;
+            box-shadow: inset 10px 10px 20px -10px rgba(138, 43, 226, 0.3);
+            animation: corner-pulse-tl 4s infinite alternate ease-in-out;
+        }
+
+        .corner-top-right {
+            top: 40px; right: 40px; border-top: 4px solid #00d4ff; border-right: 4px solid #00d4ff;
+            box-shadow: inset -10px 10px 20px -10px rgba(0, 212, 255, 0.3);
+            animation: corner-pulse-tr 4s infinite alternate ease-in-out;
+        }
+
+        .corner-bottom-left {
+            bottom: 40px; left: 40px; border-bottom: 4px solid #8a2be2; border-left: 4px solid #8a2be2;
+            box-shadow: inset 10px -10px 20px -10px rgba(138, 43, 226, 0.3);
+            animation: corner-pulse-bl 4s infinite alternate ease-in-out;
+        }
+
+        .corner-bottom-right {
+            bottom: 40px; right: 40px; border-bottom: 4px solid #00d4ff; border-right: 4px solid #00d4ff;
+            box-shadow: inset -10px -10px 20px -10px rgba(0, 212, 255, 0.3);
+            animation: corner-pulse-br 4s infinite alternate ease-in-out;
+        }
+
+        .corner-design::before {
+            content: ''; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%;
+        }
+
+        .corner-top-left::before { top: -6px; left: -6px; box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2; }
+        .corner-top-right::before { top: -6px; right: -6px; box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        .corner-bottom-left::before { bottom: -6px; left: -6px; box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2; }
+        .corner-bottom-right::before { bottom: -6px; right: -6px; box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+
+        @keyframes corner-pulse-tl { 0% { transform: scale(1) translate(0, 0); opacity: 0.7; } 100% { transform: scale(1.1) translate(-5px, -5px); opacity: 1; } }
+        @keyframes corner-pulse-tr { 0% { transform: scale(1) translate(0, 0); opacity: 0.7; } 100% { transform: scale(1.1) translate(5px, -5px); opacity: 1; } }
+        @keyframes corner-pulse-bl { 0% { transform: scale(1) translate(0, 0); opacity: 0.7; } 100% { transform: scale(1.1) translate(-5px, 5px); opacity: 1; } }
+        @keyframes corner-pulse-br { 0% { transform: scale(1) translate(0, 0); opacity: 0.7; } 100% { transform: scale(1.1) translate(5px, 5px); opacity: 1; } }
+
+        /* MCQ Interactivity Styles */
+        .mcq-option {
+            background: rgba(255, 255, 255, 0.05); border: 2px solid #555; padding: 15px 30px;
+            border-radius: 10px; width: 90%; text-align: left; cursor: pointer; transition: all 0.3s ease; position: relative;
+        }
+
+        .mcq-option:hover { background: rgba(255, 255, 255, 0.1); border-color: #888; }
+        .mcq-option .feedback { display: none; float: right; font-weight: bold; }
+        .mcq-option.correct { background: rgba(0, 212, 255, 0.2) !important; border-color: #00d4ff !important; box-shadow: 0 0 15px rgba(0, 212, 255, 0.3) !important; }
+        .mcq-option.correct .feedback { display: inline; color: #00d4ff; }
+        .mcq-option.wrong { background: rgba(255, 69, 58, 0.2) !important; border-color: #ff453a !important; box-shadow: 0 0 15px rgba(255, 69, 58, 0.3) !important; }
+        .mcq-option.wrong .feedback { display: inline; color: #ff453a; }
+        .mcq-answered .mcq-option { pointer-events: none; }
+        .reveal .controls { right: auto !important; left: 50% !important; transform: translateX(-50%) !important; bottom: 20px !important; }
+    </style>
+</head>
+
+<body>
+    <div class="edge-design edge-design-top"><div class="edge-glow-line-h"></div></div>
+    <div class="edge-design edge-design-bottom"><div class="edge-glow-line-h"></div></div>
+    <div class="corner-design corner-top-left"></div>
+    <div class="corner-design corner-top-right"></div>
+    <div class="corner-design corner-bottom-left"></div>
+    <div class="corner-design corner-bottom-right"></div>
+    <div class="side-design side-design-left">
+        <div class="side-glow-dot" style="animation-delay: 0s;"></div>
+        <div class="side-glow-line" style="animation-delay: 0.5s;"></div>
+        <div class="side-glow-dot" style="animation-delay: 1s;"></div>
+    </div>
+    <div class="side-design side-design-right">
+        <div class="side-glow-dot" style="animation-delay: 1s;"></div>
+        <div class="side-glow-line" style="animation-delay: 0s;"></div>
+        <div class="side-glow-dot" style="animation-delay: 0.5s;"></div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1: Title Slide -->
+            <section>
+                <h1>Introduction to JavaScript</h1>
+                <p>Lecture 4: Interactions & String Mastery</p>
+            </section>
+
+
+            <!-- Slide 8: Alert Boxes -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.2em; margin-bottom: 20px;">Browser Interactions</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Alert Boxes</h2>
+                <div style="text-align: left; font-size: 0.7em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #00d4ff; box-shadow: 0 5px 15px rgba(0,212,255,0.1);">
+                    <p style="margin-bottom: 20px; color: #ccc;">JavaScript provides three built-in functions to interact with the user via popup boxes in the browser:</p>
+                    <div class="fragment fade-up" style="margin-bottom: 15px;">
+                        <b style="color: #32cd32; font-size: 1.1em;">1. alert()</b>
+                        <p style="margin: 5px 0 0 0; color: #aaa;">Displays a message and waits for the user to press "OK".</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #32cd32;"><code class="language-javascript">alert("Welcome to Lecture 4!");</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9: Prompt & Confirm -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.2em; margin-bottom: 20px;">Browser Interactions</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Prompt & Confirm</h2>
+                <div style="text-align: left; font-size: 0.65em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ff69b4; box-shadow: 0 5px 15px rgba(255,105,180,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ff69b4; font-size: 1.1em;">2. prompt()</b>
+                        <p style="margin: 5px 0 0 0; color: #aaa;">Shows a message asking the user to input text. Returns the text, or <code>null</code> if canceled.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff69b4;"><code class="language-javascript">let age = prompt("How old are you?", 18);
+console.log(age);</code></pre>
+                    </div>
+                    
+                    <div class="fragment fade-up">
+                        <b style="color: #ffb86c; font-size: 1.1em;">3. confirm()</b>
+                        <p style="margin: 5px 0 0 0; color: #aaa;">Shows a message with "OK" and "Cancel". Returns <code>true</code> for OK and <code>false</code> for Cancel. Often used for warnings!</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">let leaveSite = confirm("You have unsaved changes. Are you sure you want to leave?");
+
+if (leaveSite) {
+    console.log("Leaving website...");
+} else {
+    console.log("Staying on page.");
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Use Cases: When & Why -->
+            <section>
+                <h3 style="color: #ffb86c; font-size: 1.2em; margin-bottom: 20px;">Use Cases</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">When & Why to use them?</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ffb86c; box-shadow: 0 5px 15px rgba(255,184,108,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 15px;">
+                        <b style="color: #32cd32; font-size: 1.2em;">1. alert()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;"><b>When:</b> Displaying critical errors, warnings, or simple notifications. <br><span style="color: #aaa;"><b>Why:</b> It guarantees the user sees the message because it pauses all page interactions until dismissed (e.g., "Form submitted successfully").</span></p>
+                    </div>
+                    
+                    <div class="fragment fade-up" style="margin-bottom: 15px;">
+                        <b style="color: #ff69b4; font-size: 1.2em;">2. prompt()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;"><b>When:</b> Capturing quick, simple text input from the user. <br><span style="color: #aaa;"><b>Why:</b> It provides an immediate way to store user input into a variable without having to build a full HTML form (e.g., "Enter your player name").</span></p>
+                    </div>
+
+                    <div class="fragment fade-up">
+                        <b style="color: #00d4ff; font-size: 1.2em;">3. confirm()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;"><b>When:</b> Verifying potentially dangerous or permanent actions. <br><span style="color: #aaa;"><b>Why:</b> It forces the user to make a binary decision (OK vs Cancel), acting as a safeguard to prevent accidental clicks (e.g., "Are you sure you want to delete this file?").</span></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 11: String Basics -->
+            <section>
+                <h3 style="color: #bd93f9; font-size: 1.2em; margin-bottom: 20px;">A. String Basics</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Creation & Indexing</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #bd93f9; box-shadow: 0 5px 15px rgba(189,147,249,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #bd93f9; font-size: 1.1em;">Creation</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Strings can be created using Single Quotes <code>''</code>, Double Quotes <code>""</code>, or Backticks <code>``</code>.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #bd93f9;"><code class="language-javascript">let a = "Hello"; let b = 'World'; let c = `!`;</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ffb86c; font-size: 1.1em;">Zero-Based Indexing & Length</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Strings are indexed starting from <code>0</code>. The <code>.length</code> property gives the total number of characters.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">let str = "JavaScript";
+console.log(str.length); // 10
+console.log(str[0]);     // "J" (First character)
+console.log(str[4]);     // "S"
+console.log(str[100]);   // undefined (Invalid index)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 12: Properties vs Methods -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.2em; margin-bottom: 20px;">B. Properties & Methods</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Property vs Method</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #00d4ff; box-shadow: 0 5px 15px rgba(0,212,255,0.1);">
+                    <p style="margin-bottom: 20px; color: #ccc;">A <b>Property</b> is data (no parentheses). A <b>Method</b> is an action (requires parentheses <code>()</code>).</p>
+                    <div class="fragment fade-up">
+                        <b style="color: #00d4ff; font-size: 1.1em;">Methods Without Arguments</b>
+                        <p style="margin: 5px 0 0 0; color: #aaa;">Some methods just perform an action without needing extra data.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #00d4ff;"><code class="language-javascript">let text = "   Hello World!   ";
+
+console.log(text.toUpperCase()); // "   HELLO WORLD!   "
+console.log(text.toLowerCase()); // "   hello world!   "
+
+console.log(text.trim());      // "Hello World!" (Removes spaces from BOTH ends)
+console.log(text.trimStart()); // "Hello World!   " (Removes spaces from START)
+console.log(text.trimEnd());   // "   Hello World!" (Removes spaces from END)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 13: Method Chaining -->
+            <section>
+                <h3 style="color: #ff69b4; font-size: 1.2em; margin-bottom: 20px;">B. Properties & Methods</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Method Chaining & Arguments</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ff69b4; box-shadow: 0 5px 15px rgba(255,105,180,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ff69b4; font-size: 1.1em;">Method Chaining</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">You can run multiple methods back-to-back in a single line!</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff69b4;"><code class="language-javascript">let input = "   jAvAsCrIpT   ";
+
+// Standard way
+let trimmed = input.trim();
+let cleaned = trimmed.toLowerCase();
+
+// Method Chaining (Better way)
+let result = input.trim().toLowerCase(); 
+console.log(result); // "javascript"</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #32cd32; font-size: 1.1em;">Arguments</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Many methods require <b>arguments</b> (data inside the parentheses) to tell them <i>what</i> to do.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 14: Searching Strings -->
+            <section>
+                <h3 style="color: #32cd32; font-size: 1.2em; margin-bottom: 20px;">C. Searching Strings</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">includes() & indexOf()</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #32cd32; box-shadow: 0 5px 15px rgba(50,205,50,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #32cd32; font-size: 1.1em;">includes()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Returns <code>true</code> if a string contains a specific word. It is <b>case-sensitive</b>!</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #32cd32;"><code class="language-javascript">let sentence = "I love JavaScript!";
+console.log(sentence.includes("love")); // true
+console.log(sentence.includes("Love")); // false (Case matters!)</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ffb86c; font-size: 1.1em;">indexOf()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Returns the <b>index</b> of the <i>first occurrence</i> of a substring. Returns <code>-1</code> if not found.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">console.log(sentence.indexOf("JavaScript")); // 7
+console.log(sentence.indexOf("Python"));     // -1 (Not found)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 15: Modifying Strings -->
+            <section>
+                <h3 style="color: #ff453a; font-size: 1.2em; margin-bottom: 20px;">D. Modifying Strings</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Replace & Immutability</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ff453a; box-shadow: 0 5px 15px rgba(255,69,58,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ff453a; font-size: 1.1em;">replace() & replaceAll()</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff453a;"><code class="language-javascript">let quote = "Dogs are great. I love Dogs!";
+console.log(quote.replace("Dogs", "Cats"));    // "Cats are great. I love Dogs!" (Only first)
+console.log(quote.replaceAll("Dogs", "Cats")); // "Cats are great. I love Cats!" (All)</code></pre>
+                    </div>
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ffb86c; font-size: 1.1em;">String Immutability</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Strings are <b>immutable</b>! Methods return <i>new strings</i>, they DO NOT change the original.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">let name = "Alice";
+name.toUpperCase(); // Creates a new string, but we didn't save it!
+console.log(name);  // "Alice" (Original is unchanged)</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #00d4ff; font-size: 1.1em;">concat() vs +</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Both join strings together. `+` is much more common than `concat()`.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #00d4ff;"><code class="language-javascript">console.log("Hello".concat(" ", "World")); // "Hello World"
+console.log("Hello" + " " + "World");      // "Hello World"</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 16: Formatting Strings -->
+            <section>
+                <h3 style="color: #bd93f9; font-size: 1.2em; margin-bottom: 20px;">E. Formatting Strings</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Padding & Masking</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #bd93f9; box-shadow: 0 5px 15px rgba(189,147,249,0.1);">
+                    <p style="margin-bottom: 20px; color: #ccc;"><code>padStart()</code> and <code>padEnd()</code> add characters to a string until it reaches a desired length.</p>
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #bd93f9; font-size: 1.1em;">padStart(targetLength, padString)</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #bd93f9;"><code class="language-javascript">let str = "5";
+console.log(str.padStart(3, "0")); // "005"
+console.log(str.padEnd(3, "0"));   // "500"</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ff69b4; font-size: 1.1em;">Practical Use Case: Account Masking</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff69b4;"><code class="language-javascript">let accountNum = "123456781234";
+
+// 1. Get the last 4 digits using slice
+let lastFour = accountNum.slice(-4); // "1234"
+
+// 2. Pad the start with "*" until it reaches the original length
+let masked = lastFour.padStart(accountNum.length, "*"); 
+
+console.log(masked); // "********1234"</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 17: Character-Level & Split -->
+            <section>
+                <h3 style="color: #ffb86c; font-size: 1.2em; margin-bottom: 20px;">F & G. Advanced Operations</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Characters & Arrays</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ffb86c; box-shadow: 0 5px 15px rgba(255,184,108,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 15px;">
+                        <b style="color: #ffb86c; font-size: 1.1em;">charAt() & charCodeAt()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;"><code>charAt()</code> is an older alternative to bracket notation <code>[]</code>. <code>charCodeAt()</code> returns the ASCII integer code of a character.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">let letter = "A";
+console.log(letter.charAt(0));     // "A" (Same as letter[0])
+console.log(letter.charCodeAt(0)); // 65 (The ASCII code for 'A')</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #00d4ff; font-size: 1.1em;">String to Array: split()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Splits a string into an <b>Array</b> based on a <i>separator</i> (delimiter).</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #00d4ff;"><code class="language-javascript">let names = "Alice,Bob,Charlie";
+console.log(names.split(",")); // ["Alice", "Bob", "Charlie"]
+
+let text = "Hello World";
+console.log(text.split(" "));  // ["Hello", "World"] (Split by spaces)
+console.log(text.split(""));   // ["H", "e", "l", "l", "o", " ", "W", "o", "r", "l", "d"]</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 18: Template Literals -->
+            <section>
+                <h3 style="color: #32cd32; font-size: 1.2em; margin-bottom: 10px;">H. Template Literals</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 15px;">The ES6 Revolution</h2>
+                <div style="text-align: left; font-size: 0.5em; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #32cd32; box-shadow: 0 5px 15px rgba(50,205,50,0.1);">
+                    <p style="margin-bottom: 15px; color: #ccc;">Introduced in ES6 (ES2015), Template Literals use Backticks <code>` `</code> and are far superior to `+` concatenation.</p>
+                    <div class="fragment fade-up" style="margin-bottom: 10px;">
+                        <b style="color: #32cd32; font-size: 1.1em;">String Interpolation & Expressions</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">You can dynamically inject variables and evaluate math expressions directly inside <code>${}</code>.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #32cd32;"><code class="language-javascript">let item = "Apples"; // Dynamic value
+let price = 2;
+let qty = 3;
+
+// Old Way (Hard to read, easy to miss a space)
+let msg1 = "You bought " + qty + " " + item + " for $" + (price * qty) + ".";
+
+// New Way (Clean, dynamic, and evaluates expressions!)
+let msg2 = `You bought ${qty} ${item} for $${price * qty}.`;</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ff69b4; font-size: 1.1em;">Multi-line Strings</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Template literals inherently support multi-line strings without needing `\n`.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff69b4;"><code class="language-javascript">let email = `Dear Alice,
+Thank you for joining.
+Best,
+The Team`;</code></pre>
+                    </div>
+                </div>
+            </section>
+            <!-- Slide 19: Mathematical Operators -->
+            <section>
+                <h3 style="color: #ff453a; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Mathematical Operators</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ff453a; box-shadow: 0 5px 15px rgba(255,69,58,0.1);">
+                    <p style="margin-bottom: 20px; color: #ccc;">JavaScript uses standard math operators. Some might look new!</p>
+                    <div class="fragment fade-up">
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 15px; border-radius: 8px; border-left: 2px solid #ff453a;"><code class="language-javascript">let a = 10;
+let b = 3;
+
+console.log(a + b); // 13 (Addition)
+console.log(a - b); // 7  (Subtraction)
+console.log(a * b); // 30 (Multiplication)
+console.log(a / b); // 3.3333333333333335 (Division)
+
+// Exponentiation (a to the power of b)
+console.log(a ** b); // 1000 (10 * 10 * 10)
+
+// Remainder (Modulo) - Returns the leftover after division
+console.log(a % b); // 1 (10 divided by 3 is 9, remainder 1)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 20: The Math Object -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">The Math Object</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #00d4ff; box-shadow: 0 5px 15px rgba(0,212,255,0.1);">
+                    <p style="margin-bottom: 20px; color: #ccc;">JavaScript has a built-in object called <code>Math</code> that provides properties and methods for mathematical constants and functions.</p>
+                    <div class="fragment fade-up">
+                        <b style="color: #00d4ff; font-size: 1.1em;">Math Constants (Properties)</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 15px; border-radius: 8px; border-left: 2px solid #00d4ff;"><code class="language-javascript">// Notice there are NO parentheses because these are Properties (Data)
+console.log(Math.PI);      // 3.141592653589793
+console.log(Math.E);       // 2.718281828459045 (Euler's Number)
+console.log(Math.LN2);     // 0.6931471805599453 (Natural log of 2)
+console.log(Math.SQRT2);   // 1.4142135623730951 (Square root of 2)
+console.log(Math.SQRT1_2); // 0.7071067811865476 (Square root of 1/2)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 21: Math Methods -->
+            <section>
+                <h3 style="color: #ffb86c; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Math Methods</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ffb86c; box-shadow: 0 5px 15px rgba(255,184,108,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ffb86c; font-size: 1.1em;">Utility Methods</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">console.log(Math.sqrt(64)); // 8 (Square Root)
+console.log(Math.pow(2, 3)); // 8 (2 to the power of 3) - Same as 2 ** 3
+console.log(Math.abs(-50)); // 50 (Absolute value)</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #32cd32; font-size: 1.1em;">Rounding Methods</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #32cd32;"><code class="language-javascript">let num = 4.7;
+
+console.log(Math.floor(num)); // 4 (Rounds DOWN to nearest integer)
+console.log(Math.ceil(num));  // 5 (Rounds UP to nearest integer)
+console.log(Math.round(num)); // 5 (Rounds to NEAREST integer)
+console.log(Math.round(4.4)); // 4</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 22: Random Numbers -->
+            <section>
+                <h3 style="color: #bd93f9; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Random Numbers</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #bd93f9; box-shadow: 0 5px 15px rgba(189,147,249,0.1);">
+                    <p style="margin-bottom: 15px; color: #ccc;"><code>Math.random()</code> generates a decimal number between <code>0</code> (inclusive) and <code>1</code> (exclusive).</p>
+                    <div class="fragment fade-up" style="margin-bottom: 15px;">
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #bd93f9;"><code class="language-javascript">console.log(Math.random()); // e.g., 0.123456789...</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ff69b4; font-size: 1.1em;">Generating Integer Ranges</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Combine <code>Math.random()</code> with multiplication and <code>Math.floor()</code> to get usable integers.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff69b4;"><code class="language-javascript">// 1. Multiply by Max Number (e.g., 10)
+let randomDecimal = Math.random() * 10; // 0.000 to 9.999
+
+// 2. Chop off the decimals using floor
+let randomInt = Math.floor(randomDecimal); // 0 to 9
+
+// 3. (Optional) Add 1 if you want 1 to 10 instead of 0 to 9
+let finalNum = randomInt + 1; // 1 to 10
+
+// All in one line:
+let diceRoll = Math.floor(Math.random() * 6) + 1; // 1 to 6</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 23: Special Numbers -->
+            <section>
+                <h3 style="color: #ff453a; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Special Number Values</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ff453a; box-shadow: 0 5px 15px rgba(255,69,58,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ff453a; font-size: 1.1em;">Infinity & -Infinity</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">JavaScript does not crash if you divide by zero!</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff453a;"><code class="language-javascript">console.log(10 / 0);  // Infinity
+console.log(-10 / 0); // -Infinity
+console.log(typeof Infinity); // "number"</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ffb86c; font-size: 1.1em;">NaN (Not a Number)</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Occurs when you try to do math with something that isn't a number.</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">console.log("Apples" / 2); // NaN (Not a Number)
+
+// The funny quirk of JavaScript:
+console.log(typeof NaN); // "number" 
+// (It literally means "Invalid Number", so the type is still number!)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 24: User Input -->
+            <section>
+                <h3 style="color: #32cd32; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">User Input & Coercion</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #32cd32; box-shadow: 0 5px 15px rgba(50,205,50,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #32cd32; font-size: 1.1em;">prompt() ALWAYS returns a String</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #32cd32;"><code class="language-javascript">let age = prompt("Enter age:"); // User types 25
+// age is NOT the number 25. It is the string "25".</code></pre>
+                    </div>
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ff69b4; font-size: 1.1em;">Automatic Type Coercion</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">JS tries to be helpful, but the <code>+</code> operator prioritizes String Concatenation!</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ff69b4;"><code class="language-javascript">console.log("10" - 2); // 8  (JS converts "10" to a number for subtraction)
+console.log("10" * 2); // 20 
+console.log("10" + 2); // "102" (DANGER! Uses concatenation instead of addition)</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #00d4ff; font-size: 1.1em;">Explicit Conversion</b>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #00d4ff;"><code class="language-javascript">let num = Number("10"); // Converts string "10" to number 10
+console.log(num + 2);   // 12 (Correct addition)</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 25: Practical Calculation -->
+            <section>
+                <h3 style="color: #bd93f9; font-size: 1.2em; margin-bottom: 20px;">Numbers & Math</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Practical Calculation</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #bd93f9; box-shadow: 0 5px 15px rgba(189,147,249,0.1);">
+                    <p style="margin-bottom: 15px; color: #ccc;">Putting it all together: Calculating Area & Perimeter.</p>
+                    <div class="fragment fade-up">
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 15px; border-radius: 8px; border-left: 2px solid #bd93f9;"><code class="language-javascript">// 1. Get input (Returns strings)
+let lengthStr = prompt("Enter rectangle length:");
+let widthStr = prompt("Enter rectangle width:");
+
+// 2. Convert to Numbers explicitly!
+let length = Number(lengthStr);
+let width = Number(widthStr);
+
+// 3. Calculate
+let area = length * width;
+let perimeter = 2 * (length + width); // Order of operations () applies!
+
+// 4. Output
+alert(`Area: ${area}, Perimeter: ${perimeter}`);</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 26: Browser Output -->
+            <section>
+                <h3 style="color: #ffb86c; font-size: 1.2em; margin-bottom: 20px;">Displaying Results</h3>
+                <h2 style="font-size: 1.6em; margin-bottom: 30px;">Browser Output</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 25px; border-radius: 10px; border-left: 4px solid #ffb86c; box-shadow: 0 5px 15px rgba(255,184,108,0.1);">
+                    <div class="fragment fade-up" style="margin-bottom: 20px;">
+                        <b style="color: #ffb86c; font-size: 1.1em;">document.write() vs console.log()</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;"><code>console.log()</code> is for developers. <code>document.write()</code> writes directly to the webpage for the user to see!</p>
+                        <pre style="margin: 5px 0 0 0; background: #111; padding: 10px; border-radius: 8px; border-left: 2px solid #ffb86c;"><code class="language-javascript">document.write("&lt;h1&gt;Calculation Results&lt;/h1&gt;");
+document.write(`&lt;p&gt;The area is: ${area}&lt;/p&gt;`);</code></pre>
+                    </div>
+                    <div class="fragment fade-up">
+                        <b style="color: #ff453a; font-size: 1.1em;">The defer attribute warning</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">If your <code>&lt;script&gt;</code> tag has the <code>defer</code> attribute, <code>document.write()</code> will overwrite the <b>entire</b> page instead of appending to it. We will learn better ways to update the page later (DOM Manipulation).</p>
+                    </div>
+                </div>
+            </section>
+
+
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            slideNumber: true,
+            controls: true,
+            progress: true,
+            transition: 'slide'
+        });
+
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            option.addEventListener('click', function () {
+                const parent = this.parentElement;
+                if (parent.classList.contains('mcq-answered')) return;
+
+                parent.classList.add('mcq-answered');
+
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('wrong');
+                    parent.querySelector('[data-correct="true"]').classList.add('correct');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

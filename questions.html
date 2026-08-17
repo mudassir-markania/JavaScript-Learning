@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Coding Assessment</title>
+    <style>
+        :root {
+            --bg-color: #1e1e2e;
+            --sidebar-bg: #181825;
+            --text-color: #cdd6f4;
+            --accent-color: #cba6f7;
+            --accent-glow: rgba(203, 166, 247, 0.4);
+            --editor-bg: #11111b;
+            --success-color: #a6e3a1;
+            --error-color: #f38ba8;
+            --border-color: #313244;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            color: var(--accent-color);
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            text-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .question-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .question-nav li {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .question-nav li:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .question-nav li.active {
+            background-color: rgba(203, 166, 247, 0.1);
+            border-left: 4px solid var(--accent-color);
+            color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 40px;
+            overflow-y: auto;
+        }
+
+        /* Question Header */
+        .question-header {
+            margin-bottom: 20px;
+        }
+
+        .question-title {
+            color: var(--accent-color);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .question-desc {
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #bac2de;
+            background: rgba(255,255,255,0.03);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-color);
+        }
+
+        /* Editor Area */
+        .editor-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        .run-btn {
+            background-color: var(--accent-color);
+            color: #111;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .run-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        /* Code Textarea - Built to accommodate ~15-20 lines comfortably */
+        textarea#code-editor {
+            width: 100%;
+            height: 350px; /* comfortably fits ~20 lines */
+            background-color: var(--editor-bg);
+            color: #a6e3a1; /* Light green code color */
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            outline: none;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            box-sizing: border-box;
+        }
+
+        textarea#code-editor:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* Output Terminal */
+        .terminal-container {
+            margin-top: 20px;
+            background-color: #000;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            height: 200px;
+        }
+
+        .terminal-header {
+            background-color: #1e1e2e;
+            padding: 5px 15px;
+            border-bottom: 1px solid var(--border-color);
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9rem;
+            color: #a6adc8;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .clear-btn {
+            background: none;
+            border: none;
+            color: #f38ba8;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .clear-btn:hover {
+            text-decoration: underline;
+        }
+
+        .terminal-output {
+            padding: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            color: #cdd6f4;
+            overflow-y: auto;
+            flex-grow: 1;
+            white-space: pre-wrap;
+        }
+
+        .log-error {
+            color: var(--error-color);
+        }
+        .log-info {
+            color: var(--success-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>JS Challenges</h2>
+        <ul class="question-nav" id="nav-list">
+            <!-- Populated by JS -->
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="question-header">
+            <h1 class="question-title" id="q-title">Select a Challenge</h1>
+            <div class="question-desc" id="q-desc">Choose a challenge from the sidebar to begin.</div>
+        </div>
+
+        <div class="editor-container">
+            <textarea id="code-editor" spellcheck="false" placeholder="Write your JavaScript code here..."></textarea>
+            
+            <div class="editor-toolbar">
+                <span style="font-size: 0.8rem; color: #a6adc8;">Editor supports 15-20 lines comfortably</span>
+                <button class="run-btn" onclick="executeCode()">Run Code</button>
+            </div>
+        </div>
+
+        <div class="terminal-container">
+            <div class="terminal-header">
+                <span>Console Output</span>
+                <button class="clear-btn" onclick="clearConsole()">Clear</button>
+            </div>
+            <div class="terminal-output" id="console-output"></div>
+        </div>
+    </div>
+
+    <script>
+        // Database of Questions
+        const questions = [
+            {
+                id: 1,
+                title: "1. Variables & The Console (Lecture 1)",
+                desc: "<b>Task:</b> Declare a constant variable named <code>course</code> with the value <code>'JavaScript'</code>. Declare a mutable variable named <code>progress</code> with the value <code>10</code>. Reassign <code>progress</code> to <code>20</code>. Finally, log both variables to the console.",
+                starterCode: "// Write your code here\n"
+            },
+            {
+                id: 2,
+                title: "2. Data Types (Lecture 2)",
+                desc: "<b>Task:</b> Create three variables: one holding a String, one holding a Number, and one holding a Boolean. Then, use the <code>typeof</code> operator to log the type of a <code>null</code> value.",
+                starterCode: "// Declare your string, number, and boolean variables\n\n\n// Log the type of null\n"
+            },
+            {
+                id: 3,
+                title: "3. Operations & Type Coercion (Lecture 3)",
+                desc: "<b>Task:</b> You are given a string <code>let strPrice = '50';</code>. Explicitly convert it to a number, add <code>25</code> to it, and log the final price to the console.",
+                starterCode: "let strPrice = '50';\n// Convert and calculate below:\n"
+            },
+            {
+                id: 4,
+                title: "4. Strings & Math (Lecture 4)",
+                desc: "<b>Task:</b> Generate a random integer between 1 and 100 using the <code>Math</code> object. Then, using Template Literals, create a string that says <code>Your lucky number is: X</code> (where X is your random number) and log it.",
+                starterCode: "// 1. Generate random integer between 1 and 100\n\n// 2. Create the string using a template literal and log it\n"
+            },
+            {
+                id: 5,
+                title: "5. The Quirky Puzzle (Boss Level)",
+                desc: "<b>Task:</b> JavaScript has some weird quirks! Can you fix this code? A student wrote <code>let result = '10' + 5;</code> and expected it to log <code>15</code>, but it logged <code>105</code>! Fix the code using explicit coercion. Also, try guessing and logging the result of <code>'10' - 5</code> and <code>typeof NaN</code>.",
+                starterCode: "// Fix this code so it logs 15, not 105:\nlet result = '10' + 5;\nconsole.log(result);\n\n// Try these out:\nconsole.log('10' - 5);\nconsole.log(typeof NaN);\n"
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        // Elements
+        const navList = document.getElementById('nav-list');
+        const qTitle = document.getElementById('q-title');
+        const qDesc = document.getElementById('q-desc');
+        const codeEditor = document.getElementById('code-editor');
+        const consoleOutput = document.getElementById('console-output');
+
+        // Initialize UI
+        function init() {
+            questions.forEach((q, index) => {
+                const li = document.createElement('li');
+                li.textContent = `Challenge ${q.id}`;
+                li.onclick = () => loadQuestion(index);
+                navList.appendChild(li);
+            });
+            // Load first question by default
+            loadQuestion(0);
+        }
+
+        function loadQuestion(index) {
+            currentQuestion = index;
+            const q = questions[index];
+            
+            // Update Active State in Nav
+            Array.from(navList.children).forEach((li, i) => {
+                li.className = i === index ? 'active' : '';
+            });
+
+            // Update Content
+            qTitle.textContent = q.title;
+            qDesc.innerHTML = q.desc;
+            codeEditor.value = q.starterCode;
+            
+            clearConsole();
+        }
+
+        // --- Custom Console Logic ---
+        function printToTerminal(message, type = 'normal') {
+            const span = document.createElement('div');
+            if (type === 'error') {
+                span.className = 'log-error';
+            } else {
+                span.className = 'log-info';
+            }
+            
+            // Format object/arrays nicely if needed
+            if (typeof message === 'object' && message !== null) {
+                span.textContent = '> ' + JSON.stringify(message, null, 2);
+            } else {
+                span.textContent = '> ' + String(message);
+            }
+            
+            consoleOutput.appendChild(span);
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        function clearConsole() {
+            consoleOutput.innerHTML = '';
+        }
+
+        function executeCode() {
+            clearConsole();
+            const userCode = codeEditor.value;
+            
+            // Create a safe proxy for console to capture logs
+            const originalConsoleLog = console.log;
+            
+            try {
+                // Override console.log temporarily
+                console.log = function(...args) {
+                    const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+                    printToTerminal(msg, 'normal');
+                    originalConsoleLog.apply(console, args); // Still log to real browser console
+                };
+
+                // Execute the code inside an IIFE to prevent variable pollution across runs
+                const runFunc = new Function(`
+                    try {
+                        ${userCode}
+                    } catch (e) {
+                        throw e;
+                    }
+                `);
+                
+                runFunc();
+                
+            } catch (error) {
+                printToTerminal(error.toString(), 'error');
+            } finally {
+                // Restore original console.log
+                console.log = originalConsoleLog;
+            }
+        }
+
+        // Start
+        window.onload = init;
+    </script>
+</body>
+</html>

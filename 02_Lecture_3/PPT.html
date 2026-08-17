@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to JavaScript</title>
+    <!-- Reveal.js basic styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <!-- Reveal.js theme: night (dark theme) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Base typography */
+        .reveal {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            letter-spacing: 0.5px;
+            font-size: 38px;
+            /* Slightly decreased base font size */
+        }
+
+        /* Body text and list items */
+        .reveal p,
+        .reveal li {
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+        /* Custom styles to override default uppercase titles */
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4,
+        .reveal h5,
+        .reveal h6 {
+            text-transform: none;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .reveal h1 {
+            font-size: 2.7em !important;
+        }
+
+        .reveal h2 {
+            font-size: 2em !important;
+        }
+
+        /* Gradient Text for Main Headings */
+        .reveal h1 {
+            background: linear-gradient(45deg, #8a2be2, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+        }
+
+        .reveal h2 {
+            background: linear-gradient(45deg, #00d4ff, #8a2be2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom Bullet Points */
+        .reveal ul {
+            list-style-type: none;
+        }
+
+        .reveal ul li::before {
+            content: '▹';
+            color: #00d4ff;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            text-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* Left and Right Side Design Elements */
+        .side-design {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            z-index: 1000;
+            pointer-events: none;
+            /* Let clicks pass through to controls */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .side-design-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(138, 43, 226, 0.15), transparent);
+            border-left: 4px solid rgba(138, 43, 226, 0.8);
+            box-shadow: inset 15px 0 30px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .side-design-right {
+            right: 0;
+            background: linear-gradient(to left, rgba(0, 212, 255, 0.15), transparent);
+            border-right: 4px solid rgba(0, 212, 255, 0.8);
+            box-shadow: inset -15px 0 30px -10px rgba(0, 212, 255, 0.3);
+        }
+
+        /* Aesthetic glowing elements inside the sides */
+        .side-glow-line {
+            width: 2px;
+            height: 120px;
+            background: #fff;
+            border-radius: 4px;
+            animation: pulse-line 3s infinite alternate ease-in-out;
+        }
+
+        .side-glow-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #fff;
+            animation: float-dot 4s infinite alternate ease-in-out;
+        }
+
+        /* Left Side Colors */
+        .side-design-left .side-glow-line,
+        .side-design-left .side-glow-dot {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+
+        /* Right Side Colors */
+        .side-design-right .side-glow-line,
+        .side-design-right .side-glow-dot {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+
+        /* Animations */
+        @keyframes pulse-line {
+            0% {
+                opacity: 0.2;
+                height: 60px;
+                transform: scaleY(1);
+            }
+
+            100% {
+                opacity: 1;
+                height: 160px;
+                transform: scaleY(1.1);
+            }
+        }
+
+        @keyframes float-dot {
+            0% {
+                transform: translateY(20px) scale(0.8);
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translateY(-20px) scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Remove default Reveal.js image styling for logos */
+        .reveal section img.icon-logo {
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            margin: 0 !important;
+        }
+
+        /* Top and Bottom Edge Designs */
+        .edge-design {
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 60px;
+            z-index: 1000;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edge-design-top {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(138, 43, 226, 0.15), transparent);
+            border-top: 4px solid rgba(138, 43, 226, 0.8);
+            box-shadow: inset 0 15px 30px -10px rgba(138, 43, 226, 0.3);
+        }
+
+        .edge-design-bottom {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 212, 255, 0.15), transparent);
+            border-bottom: 4px solid rgba(0, 212, 255, 0.8);
+            box-shadow: inset 0 -15px 30px -10px rgba(0, 212, 255, 0.3);
+        }
+
+        .edge-glow-line-h {
+            height: 2px;
+            width: 150px;
+            background: #fff;
+            border-radius: 4px;
+            animation: sweep-line-h 4s infinite alternate ease-in-out;
+        }
+
+        .edge-design-top .edge-glow-line-h {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+
+        .edge-design-bottom .edge-glow-line-h {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+
+        @keyframes sweep-line-h {
+            0% {
+                transform: translateX(-40vw);
+                opacity: 0.2;
+            }
+
+            50% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateX(40vw);
+                opacity: 0.2;
+            }
+        }
+
+        /* Background grid effect */
+        body {
+            background-color: #111;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            background-position: center center;
+        }
+
+        /* Corner Designs */
+        .corner-design {
+            position: fixed;
+            width: 120px;
+            height: 120px;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .corner-top-left {
+            top: 40px;
+            left: 40px;
+            border-top: 4px solid #8a2be2;
+            border-left: 4px solid #8a2be2;
+            box-shadow: inset 10px 10px 20px -10px rgba(138, 43, 226, 0.3);
+            animation: corner-pulse-tl 4s infinite alternate ease-in-out;
+        }
+
+        .corner-top-right {
+            top: 40px;
+            right: 40px;
+            border-top: 4px solid #00d4ff;
+            border-right: 4px solid #00d4ff;
+            box-shadow: inset -10px 10px 20px -10px rgba(0, 212, 255, 0.3);
+            animation: corner-pulse-tr 4s infinite alternate ease-in-out;
+        }
+
+        .corner-bottom-left {
+            bottom: 40px;
+            left: 40px;
+            border-bottom: 4px solid #8a2be2;
+            border-left: 4px solid #8a2be2;
+            box-shadow: inset 10px -10px 20px -10px rgba(138, 43, 226, 0.3);
+            animation: corner-pulse-bl 4s infinite alternate ease-in-out;
+        }
+
+        .corner-bottom-right {
+            bottom: 40px;
+            right: 40px;
+            border-bottom: 4px solid #00d4ff;
+            border-right: 4px solid #00d4ff;
+            box-shadow: inset -10px -10px 20px -10px rgba(0, 212, 255, 0.3);
+            animation: corner-pulse-br 4s infinite alternate ease-in-out;
+        }
+
+        .corner-design::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+        }
+
+        .corner-top-left::before {
+            top: -6px;
+            left: -6px;
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2;
+        }
+
+        .corner-top-right::before {
+            top: -6px;
+            right: -6px;
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;
+        }
+
+        .corner-bottom-left::before {
+            bottom: -6px;
+            left: -6px;
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2;
+        }
+
+        .corner-bottom-right::before {
+            bottom: -6px;
+            right: -6px;
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;
+        }
+
+        @keyframes corner-pulse-tl {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1.1) translate(-5px, -5px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes corner-pulse-tr {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1.1) translate(5px, -5px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes corner-pulse-bl {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1.1) translate(-5px, 5px);
+                opacity: 1;
+            }
+        }
+
+        @keyframes corner-pulse-br {
+            0% {
+                transform: scale(1) translate(0, 0);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1.1) translate(5px, 5px);
+                opacity: 1;
+            }
+        }
+
+        /* MCQ Interactivity Styles */
+        .mcq-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #555;
+            padding: 15px 30px;
+            border-radius: 10px;
+            width: 90%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .mcq-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #888;
+        }
+
+        .mcq-option .feedback {
+            display: none;
+            float: right;
+            font-weight: bold;
+        }
+
+        .mcq-option.correct {
+            background: rgba(0, 212, 255, 0.2) !important;
+            border-color: #00d4ff !important;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.3) !important;
+        }
+
+        .mcq-option.correct .feedback {
+            display: inline;
+            color: #00d4ff;
+        }
+
+        .mcq-option.wrong {
+            background: rgba(255, 69, 58, 0.2) !important;
+            border-color: #ff453a !important;
+            box-shadow: 0 0 15px rgba(255, 69, 58, 0.3) !important;
+        }
+
+        .mcq-option.wrong .feedback {
+            display: inline;
+            color: #ff453a;
+        }
+
+        .mcq-answered .mcq-option {
+            pointer-events: none;
+        }
+
+        /* Center the navigation controls at the bottom */
+        .reveal .controls {
+            right: auto !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            bottom: 20px !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Edge Designs (Top and Bottom) -->
+    <div class="edge-design edge-design-top">
+        <div class="edge-glow-line-h"></div>
+    </div>
+    <div class="edge-design edge-design-bottom">
+        <div class="edge-glow-line-h"></div>
+    </div>
+
+    <!-- Corner Designs -->
+    <div class="corner-design corner-top-left"></div>
+    <div class="corner-design corner-top-right"></div>
+    <div class="corner-design corner-bottom-left"></div>
+    <div class="corner-design corner-bottom-right"></div>
+
+    <!-- Side Designs -->
+    <div class="side-design side-design-left">
+        <div class="side-glow-dot" style="animation-delay: 0s;"></div>
+        <div class="side-glow-line" style="animation-delay: 0.5s;"></div>
+        <div class="side-glow-dot" style="animation-delay: 1s;"></div>
+    </div>
+    <div class="side-design side-design-right">
+        <div class="side-glow-dot" style="animation-delay: 1s;"></div>
+        <div class="side-glow-line" style="animation-delay: 0s;"></div>
+        <div class="side-glow-dot" style="animation-delay: 0.5s;"></div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+            <!-- Slide 1: Title Slide -->
+            <section>
+                <h1>Introduction to JavaScript</h1>
+                <p>Lecture 3: Recap & Next Steps</p>
+            </section>
+
+            <!-- Slide 2: MCQ 1 -->
+            <section>
+                <h3 style="color: #ff69b4; font-size: 1.2em; margin-bottom: 20px;">Recap: Question 1</h3>
+                <h2 style="font-size: 1.4em;">Where are non-primitive (reference) types stored in memory?</h2>
+                <div class="mcq-container"
+                    style="display: flex; flex-direction: column; gap: 15px; margin-top: 40px; font-size: 0.8em; align-items: center;">
+                    <div class="mcq-option" data-correct="false">
+                        <b>A)</b> The Call Stack <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="true">
+                        <b>B)</b> The Memory Heap <span class="feedback">&check; Correct</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false">
+                        <b>C)</b> The Temporal Dead Zone <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false">
+                        <b>D)</b> The V8 Engine <span class="feedback">&times; Incorrect</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: MCQ 2 -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.2em; margin-bottom: 20px;">Recap: Question 2</h3>
+                <h2 style="font-size: 1.4em;">Which variable declaration keyword does NOT allow reassignment?</h2>
+                <div class="mcq-container"
+                    style="display: flex; flex-direction: column; gap: 15px; margin-top: 40px; font-size: 0.75em; align-items: center;">
+                    <div class="mcq-option" data-correct="false" style="width: 95%;">
+                        <b>A)</b> var <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%;">
+                        <b>B)</b> let <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="true" style="width: 95%;">
+                        <b>C)</b> const <span class="feedback">&check; Correct</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%;">
+                        <b>D)</b> function <span class="feedback">&times; Incorrect</span>
+                    </div>
+                </div>
+            </section>
+            <!-- Slide 4: MCQ 3 -->
+            <section>
+                <h3 style="color: #ff69b4; font-size: 1.2em; margin-bottom: 20px;">Recap: Question 3</h3>
+                <h2 style="font-size: 1.4em;">Which data type represents the intentional absence of any object value?</h2>
+                <div class="mcq-container"
+                    style="display: flex; flex-direction: column; gap: 15px; margin-top: 40px; font-size: 0.8em; align-items: center;">
+                    <div class="mcq-option" data-correct="false" style="width: 90%;">
+                        <b>A)</b> undefined <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="true" style="width: 90%;">
+                        <b>B)</b> null <span class="feedback">&check; Correct</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 90%;">
+                        <b>C)</b> NaN <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 90%;">
+                        <b>D)</b> 0 <span class="feedback">&times; Incorrect</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: MCQ 4 -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.2em; margin-bottom: 20px;">Recap: Question 4</h3>
+                <h2 style="font-size: 1.4em;">What happens if you try to access a `let` variable before it is declared?</h2>
+                <div class="mcq-container"
+                    style="display: flex; flex-direction: column; gap: 15px; margin-top: 40px; font-size: 0.75em; align-items: center;">
+                    <div class="mcq-option" data-correct="false" style="width: 95%;">
+                        <b>A)</b> It evaluates to undefined <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="true" style="width: 95%;">
+                        <b>B)</b> Throws ReferenceError (Temporal Dead Zone) <span class="feedback">&check; Correct</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%;">
+                        <b>C)</b> It evaluates to null <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%;">
+                        <b>D)</b> It gets hoisted to the top and works normally <span class="feedback">&times; Incorrect</span>
+                    </div>
+                </div>
+            </section>
+            <!-- Slide 6: MCQ 5 -->
+            <section>
+                <h3 style="color: #ff69b4; font-size: 1.0em; margin-bottom: 5px;">Recap: Question 5</h3>
+                <h2 style="font-size: 0.8em; margin-bottom: 5px; line-height: 1.2;">If you declare a `const` object, can you change its properties?</h2>
+                <div class="mcq-container"
+                    style="display: flex; flex-direction: column; gap: 8px; margin-top: 5px; font-size: 0.55em; align-items: center;">
+                    <div class="mcq-option" data-correct="false" style="width: 95%; padding: 5px 15px;">
+                        <b>A)</b> No, const makes the object completely immutable <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="true" style="width: 95%; padding: 5px 15px;">
+                        <b>B)</b> Yes, you can change properties, but cannot reassign the object itself <span class="feedback">&check; Correct</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%; padding: 5px 15px;">
+                        <b>C)</b> Yes, but only if you use Object.assign() <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%; padding: 5px 15px;">
+                        <b>D)</b> No, you must use let to declare objects that change <span class="feedback">&times; Incorrect</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: MCQ 6 -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.0em; margin-bottom: 5px;">Recap: Question 6</h3>
+                <h2 style="font-size: 0.8em; margin-bottom: 5px; line-height: 1.2;">Which data type would you use to accurately represent a number larger than Number.MAX_SAFE_INTEGER?</h2>
+                <div class="mcq-container"
+                    style="display: flex; flex-direction: column; gap: 8px; margin-top: 5px; font-size: 0.55em; align-items: center;">
+                    <div class="mcq-option" data-correct="false" style="width: 95%; padding: 5px 15px;">
+                        <b>A)</b> Number <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%; padding: 5px 15px;">
+                        <b>B)</b> String <span class="feedback">&times; Incorrect</span>
+                    </div>
+                    <div class="mcq-option" data-correct="true" style="width: 95%; padding: 5px 15px;">
+                        <b>C)</b> BigInt <span class="feedback">&check; Correct</span>
+                    </div>
+                    <div class="mcq-option" data-correct="false" style="width: 95%; padding: 5px 15px;">
+                        <b>D)</b> Symbol <span class="feedback">&times; Incorrect</span>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Slide 7: Homework Answers (Q1 & Q2) -->
+            <section>
+                <h3 style="color: #32cd32; font-size: 1.0em; margin-bottom: 20px;">Homework Review</h3>
+                <h2 style="font-size: 1.2em; margin-bottom: 30px;">Answers: Part 1</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #32cd32;">
+                    <div class="fragment fade-right" style="margin-bottom: 20px;">
+                        <b style="color: #32cd32;">1. Primitive vs Reference:</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Primitives (like Strings) are stored directly in the <b style="color: #fff;">Call Stack</b> because they have a fixed size. Non-primitives (like Objects) are stored in the <b style="color: #fff;">Memory Heap</b> because they can grow dynamically. The Stack only holds a memory address (reference) pointing to the Heap.</p>
+                    </div>
+                    <div class="fragment fade-right">
+                        <b style="color: #ffb86c;">2. The Dead Zone:</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">The Temporal Dead Zone (TDZ) is the period between when a <code>let</code> or <code>const</code> variable is hoisted to the top of its scope and when it is actually initialized. Accessing it during this time results in a <code>ReferenceError: Cannot access variable before initialization</code>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Homework Answers (Q3 & Q4) -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 1.0em; margin-bottom: 20px;">Homework Review</h3>
+                <h2 style="font-size: 1.2em; margin-bottom: 30px;">Answers: Part 2</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #00d4ff;">
+                    <div class="fragment fade-right" style="margin-bottom: 20px;">
+                        <b style="color: #00d4ff;">3. The Code Janitor:</b>
+                        <p style="margin: 5px 0 5px 0; color: #ccc;">Refactored Industry Standards:</p>
+                        <pre style="margin: 0; background: #111; padding: 10px; border-radius: 8px; width: 100%; border-left: 2px solid #00d4ff;"><code class="language-javascript" style="font-size: 0.8em; line-height: 1.2;">const firstUser = "Bob"; // Can't start with number, use const
+const users = [];        // Use plural nouns for arrays, use const
+const API_KEY = "123";   // Global hardcoded constants in UPPER_SNAKE_CASE</code></pre>
+                    </div>
+                    <div class="fragment fade-right">
+                        <b style="color: #ff69b4;">4. The 'const' Contract:</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Trying to reassign a <code>const</code> variable results in the exact error: <br><code>TypeError: Assignment to constant variable.</code></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9: Homework Answers (Q5 & Q6) -->
+            <section>
+                <h3 style="color: #bd93f9; font-size: 1.0em; margin-bottom: 20px;">Homework Review</h3>
+                <h2 style="font-size: 1.2em; margin-bottom: 30px;">Answers: Part 3</h2>
+                <div style="text-align: left; font-size: 0.6em; background: rgba(255,255,255,0.03); padding: 20px; border-radius: 10px; border-left: 4px solid #bd93f9;">
+                    <div class="fragment fade-right" style="margin-bottom: 20px;">
+                        <b style="color: #f1fa8c;">5. Hoisting Hero:</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">When you try to log a <code>var</code> variable before initialization, it prints <code>undefined</code>. It doesn't crash because JS "hoists" the variable declaration to the top of its scope and initializes it with <code>undefined</code> by default.</p>
+                    </div>
+                    <div class="fragment fade-right">
+                        <b style="color: #bd93f9;">6. DevTools Debugger:</b>
+                        <p style="margin: 5px 0 0 0; color: #ccc;">Using <code>debugger;</code> and <b>F10</b> allows you to pause execution and step through line by line. In the <i>Scope</i> pane, you can visibly see variables move from being uninitialized (in the TDZ) or <code>undefined</code>, to having their actual values assigned!</p>
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Slide 11: Homework Problem 1 -->
+            <section>
+                <h3 style="color: #ff453a; font-size: 0.9em; margin-bottom: 5px;">Homework Challenge 1</h3>
+                <h2 style="font-size: 1.1em; margin-bottom: 15px;">The Reference Trap</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #ff453a;">
+                    <pre style="margin: 0 0 10px 0; background: #111; padding: 10px; border-radius: 8px; width: 100%; border-left: 2px solid #ff453a;"><code class="language-javascript">const originalUser = { username: "coder123", score: 50 };
+
+// Creating a backup
+const backupUser = originalUser;
+backupUser.score = 0;
+
+let attempts = 5;
+let backupAttempts = attempts;
+backupAttempts = 0;
+
+console.log(originalUser.score); // ?
+console.log(attempts);           // ?</code></pre>
+                    <b style="color: #ff453a;">Task:</b>
+                    <p style="margin: 5px 0 0 0; color: #ccc;">What are the exact output values for the two <code>console.log</code> statements? Explain <i>why</i> <code>originalUser</code> was modified but <code>attempts</code> was not, referencing the <b>Call Stack</b>, <b>Memory Heap</b>, and how Primitives/References work.</p>
+                </div>
+            </section>
+
+            <!-- Slide 12: Homework Problem 2 -->
+            <section>
+                <h3 style="color: #bd93f9; font-size: 0.9em; margin-bottom: 5px;">Homework Challenge 2</h3>
+                <h2 style="font-size: 1.1em; margin-bottom: 15px;">The Hoisting Nightmare</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #bd93f9;">
+                    <pre style="margin: 0 0 10px 0; background: #111; padding: 10px; border-radius: 8px; width: 100%; border-left: 2px solid #bd93f9;"><code class="language-javascript">var secretCode = "A123";
+
+function crackCode() {
+    console.log(secretCode); 
+    
+    var secretCode = "B456";
+    let attempts = 3;
+    
+    if (true) {
+        console.log(attempts);
+        let attempts = 5;
+    }
+}
+crackCode();</code></pre>
+                    <b style="color: #bd93f9;">Task:</b>
+                    <p style="margin: 5px 0 0 0; color: #ccc;">This code contains two major traps that cause unexpected output and a fatal crash. Identify the bugs, explain what causes them (mentioning <b>Hoisting</b> and the <b>Temporal Dead Zone</b>), and rewrite the code to fix them.</p>
+                </div>
+            </section>
+
+            <!-- Slide 13: Homework Problem 3 -->
+            <section>
+                <h3 style="color: #00d4ff; font-size: 0.9em; margin-bottom: 5px;">Homework Challenge 3</h3>
+                <h2 style="font-size: 1.1em; margin-bottom: 15px;">Engine Execution & Types</h2>
+                <div style="text-align: left; font-size: 0.55em; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 10px; border-left: 4px solid #00d4ff;">
+                    <pre style="margin: 0 0 10px 0; background: #111; padding: 10px; border-radius: 8px; width: 100%; border-left: 2px solid #00d4ff;"><code class="language-javascript">let player1Score = "100";
+let player2Score = 50;
+let totalScore = player1Score + player2Score;
+console.log("Total Score: " + totalScore);
+
+let username;
+const MAX_LEVEL = 100;
+// MAX_LEVEL = 101; 
+
+console.log(username);</code></pre>
+                    <b style="color: #00d4ff;">Task:</b>
+                    <ol style="margin: 5px 0 0 0; color: #ccc; padding-left: 15px;">
+                        <li>When you run this code, what is the exact value of <code>totalScore</code>? Why does the V8 Engine behave like this?</li>
+                        <li>What is printed for <code>username</code> and why?</li>
+                        <li>If you uncomment the <code>MAX_LEVEL = 101;</code> line, what specific error occurs and why?</li>
+                    </ol>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script>
+        // Initialize Reveal.js
+        Reveal.initialize({
+            hash: true, // Enables URL hash routing for slides
+            slideNumber: true, // Shows slide numbers
+            controls: true, // Display controls
+            progress: true, // Display a presentation progress bar
+            transition: 'slide' // none/fade/slide/convex/concave/zoom
+        });
+
+        // MCQ Logic
+        document.querySelectorAll('.mcq-option').forEach(option => {
+            option.addEventListener('click', function () {
+                const parent = this.parentElement;
+                if (parent.classList.contains('mcq-answered')) return;
+
+                parent.classList.add('mcq-answered');
+
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('wrong');
+                    // Highlight the correct one so they know the answer
+                    parent.querySelector('[data-correct="true"]').classList.add('correct');
+                }
+            });
+        });
+
+        // DevTools Demo Logic
+        document.getElementById('runDevToolsBtn').addEventListener('click', function () {
+            debugger; // Execution pauses here!
+
+            var firstName = 'Akash'
+            let lastName = 'Singh'
+            let age = 15
+            const yearOfBirth = 1999
+
+            let userIntro = 'Hi, my name is ' + firstName + ' ' + lastName
+            console.log(userIntro)
+
+            alert("Demo Finished! Check the console.");
+        });
+    </script>
+</body>
+
+</html>
