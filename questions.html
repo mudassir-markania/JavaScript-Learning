@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript Coding Assessment</title>
+    <!-- Load Ace Editor from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.2/ace.js"></script>
     <style>
         :root {
             --bg-color: #1e1e2e;
@@ -132,26 +134,13 @@
             box-shadow: 0 0 15px var(--accent-glow);
         }
 
-        /* Code Textarea - Built to accommodate ~15-20 lines comfortably */
-        textarea#code-editor {
+        /* Ace Editor Container */
+        #code-editor {
             width: 100%;
-            height: 350px; /* comfortably fits ~20 lines */
-            background-color: var(--editor-bg);
-            color: #a6e3a1; /* Light green code color */
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 16px;
-            line-height: 1.5;
-            padding: 15px;
+            height: 350px; 
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            resize: vertical;
-            outline: none;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-            box-sizing: border-box;
-        }
-
-        textarea#code-editor:focus {
-            border-color: var(--accent-color);
+            font-size: 16px;
         }
 
         /* Output Terminal */
@@ -201,7 +190,13 @@
             color: var(--error-color);
         }
         .log-info {
+            color: var(--text-color);
+        }
+        .log-success {
             color: var(--success-color);
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
         }
     </style>
 </head>
@@ -221,11 +216,12 @@
         </div>
 
         <div class="editor-container">
-            <textarea id="code-editor" spellcheck="false" placeholder="Write your JavaScript code here..."></textarea>
+            <!-- Replaced textarea with a div for Ace Editor -->
+            <div id="code-editor"></div>
             
             <div class="editor-toolbar">
-                <span style="font-size: 0.8rem; color: #a6adc8;">Editor supports 15-20 lines comfortably</span>
-                <button class="run-btn" onclick="executeCode()">Run Code</button>
+                <span style="font-size: 0.8rem; color: #a6adc8;">Syntax Highlighting Enabled</span>
+                <button class="run-btn" onclick="executeCode()">Run & Verify</button>
             </div>
         </div>
 
@@ -245,45 +241,83 @@
                 id: 1,
                 title: "1. Variables & The Console (Lecture 1)",
                 desc: "<b>Task:</b> Declare a constant variable named <code>course</code> with the value <code>'JavaScript'</code>. Declare a mutable variable named <code>progress</code> with the value <code>10</code>. Reassign <code>progress</code> to <code>20</code>. Finally, log both variables to the console.",
-                starterCode: "// Write your code here\n"
+                starterCode: "// Write your code here\n",
+                userCode: "",
+                verify: function(logs) {
+                    const loggedJS = logs.some(l => l.includes('JavaScript'));
+                    const logged20 = logs.some(l => l.includes('20'));
+                    return loggedJS && logged20;
+                }
             },
             {
                 id: 2,
                 title: "2. Data Types (Lecture 2)",
                 desc: "<b>Task:</b> Create three variables: one holding a String, one holding a Number, and one holding a Boolean. Then, use the <code>typeof</code> operator to log the type of a <code>null</code> value.",
-                starterCode: "// Declare your string, number, and boolean variables\n\n\n// Log the type of null\n"
+                starterCode: "// Declare your string, number, and boolean variables\n\n\n// Log the type of null\n",
+                userCode: "",
+                verify: function(logs) {
+                    // typeof null evaluates to 'object'
+                    return logs.some(l => l.includes('object'));
+                }
             },
             {
                 id: 3,
                 title: "3. Operations & Type Coercion (Lecture 3)",
                 desc: "<b>Task:</b> You are given a string <code>let strPrice = '50';</code>. Explicitly convert it to a number, add <code>25</code> to it, and log the final price to the console.",
-                starterCode: "let strPrice = '50';\n// Convert and calculate below:\n"
+                starterCode: "let strPrice = '50';\n// Convert and calculate below:\n",
+                userCode: "",
+                verify: function(logs) {
+                    // 50 + 25 = 75
+                    return logs.some(l => l.includes('75'));
+                }
             },
             {
                 id: 4,
                 title: "4. Strings & Math (Lecture 4)",
                 desc: "<b>Task:</b> Generate a random integer between 1 and 100 using the <code>Math</code> object. Then, using Template Literals, create a string that says <code>Your lucky number is: X</code> (where X is your random number) and log it.",
-                starterCode: "// 1. Generate random integer between 1 and 100\n\n// 2. Create the string using a template literal and log it\n"
+                starterCode: "// 1. Generate random integer between 1 and 100\n\n// 2. Create the string using a template literal and log it\n",
+                userCode: "",
+                verify: function(logs) {
+                    return logs.some(l => l.includes('Your lucky number is:'));
+                }
             },
             {
                 id: 5,
                 title: "5. The Quirky Puzzle (Boss Level)",
                 desc: "<b>Task:</b> JavaScript has some weird quirks! Can you fix this code? A student wrote <code>let result = '10' + 5;</code> and expected it to log <code>15</code>, but it logged <code>105</code>! Fix the code using explicit coercion. Also, try guessing and logging the result of <code>'10' - 5</code> and <code>typeof NaN</code>.",
-                starterCode: "// Fix this code so it logs 15, not 105:\nlet result = '10' + 5;\nconsole.log(result);\n\n// Try these out:\nconsole.log('10' - 5);\nconsole.log(typeof NaN);\n"
+                starterCode: "// Fix this code so it logs 15, not 105:\nlet result = '10' + 5;\nconsole.log(result);\n\n// Try these out:\nconsole.log('10' - 5);\nconsole.log(typeof NaN);\n",
+                userCode: "",
+                verify: function(logs) {
+                    const logs15 = logs.some(l => l.includes('15'));
+                    const logs5 = logs.some(l => l.match(/\b5\b/)); // '10' - 5 = 5
+                    const logsNumber = logs.some(l => l.includes('number')); // typeof NaN = number
+                    return logs15 && logs5 && logsNumber;
+                }
             }
         ];
 
         let currentQuestion = 0;
+        let editor;
 
         // Elements
         const navList = document.getElementById('nav-list');
         const qTitle = document.getElementById('q-title');
         const qDesc = document.getElementById('q-desc');
-        const codeEditor = document.getElementById('code-editor');
         const consoleOutput = document.getElementById('console-output');
 
-        // Initialize UI
+        // Initialize UI and Ace Editor
         function init() {
+            // Initialize Ace Editor
+            editor = ace.edit("code-editor");
+            editor.setTheme("ace/theme/dracula");
+            editor.session.setMode("ace/mode/javascript");
+            editor.setOptions({
+                fontSize: "16px",
+                showPrintMargin: false,
+                useWorker: false // disables syntax checking warnings to keep it clean
+            });
+
+            // Build Navigation
             questions.forEach((q, index) => {
                 const li = document.createElement('li');
                 li.textContent = `Challenge ${q.id}`;
@@ -295,6 +329,11 @@
         }
 
         function loadQuestion(index) {
+            // Save the user's progress for the CURRENT question before switching
+            if (editor && typeof currentQuestion !== 'undefined') {
+                questions[currentQuestion].userCode = editor.getValue();
+            }
+
             currentQuestion = index;
             const q = questions[index];
             
@@ -306,25 +345,33 @@
             // Update Content
             qTitle.textContent = q.title;
             qDesc.innerHTML = q.desc;
-            codeEditor.value = q.starterCode;
+            
+            // Load saved user code, or fall back to starter code
+            if (q.userCode.trim() !== "") {
+                editor.setValue(q.userCode, -1); // -1 moves cursor to start
+            } else {
+                editor.setValue(q.starterCode, -1);
+            }
             
             clearConsole();
         }
 
         // --- Custom Console Logic ---
         function printToTerminal(message, type = 'normal') {
-            const span = document.createElement('div');
+            const span = document.createElement('span');
             if (type === 'error') {
                 span.className = 'log-error';
+            } else if (type === 'success') {
+                span.className = 'log-success';
             } else {
                 span.className = 'log-info';
             }
             
             // Format object/arrays nicely if needed
             if (typeof message === 'object' && message !== null) {
-                span.textContent = '> ' + JSON.stringify(message, null, 2);
+                span.textContent = '> ' + JSON.stringify(message, null, 2) + '\n';
             } else {
-                span.textContent = '> ' + String(message);
+                span.textContent = '> ' + String(message) + '\n';
             }
             
             consoleOutput.appendChild(span);
@@ -337,15 +384,20 @@
 
         function executeCode() {
             clearConsole();
-            const userCode = codeEditor.value;
+            
+            // Ensure we save the latest code state
+            const userCode = editor.getValue();
+            questions[currentQuestion].userCode = userCode;
             
             // Create a safe proxy for console to capture logs
             const originalConsoleLog = console.log;
+            let capturedLogs = [];
             
             try {
                 // Override console.log temporarily
                 console.log = function(...args) {
                     const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ');
+                    capturedLogs.push(msg);
                     printToTerminal(msg, 'normal');
                     originalConsoleLog.apply(console, args); // Still log to real browser console
                 };
@@ -361,6 +413,14 @@
                 
                 runFunc();
                 
+                // --- Verification Logic ---
+                const q = questions[currentQuestion];
+                if (q.verify(capturedLogs)) {
+                    printToTerminal("✅ CORRECT: Great job! You solved the challenge.", "success");
+                } else {
+                    printToTerminal("❌ INCORRECT: Your output doesn't match the expected result. Keep trying!", "error");
+                }
+
             } catch (error) {
                 printToTerminal(error.toString(), 'error');
             } finally {
