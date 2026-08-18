@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript - Lecture 5: Control Flow & Logic</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Base typography ── */
+        .reveal {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            letter-spacing: 0.3px;
+            font-size: 28px; /* reduced from 38px */
+        }
+
+        .reveal p, .reveal li {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3,
+        .reveal h4, .reveal h5, .reveal h6 {
+            text-transform: none;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h1 { font-size: 2.4em !important; }
+        .reveal h2 { font-size: 1.6em !important; }
+        .reveal h3 { font-size: 0.9em !important; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.2em; }
+
+        /* Gradient headings */
+        .reveal h1 {
+            background: linear-gradient(45deg, #8a2be2, #00d4ff);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+        }
+        .reveal h2 {
+            background: linear-gradient(45deg, #00d4ff, #8a2be2);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom bullet points */
+        .reveal ul { list-style-type: none; }
+        .reveal ul li::before {
+            content: '▹'; color: #00d4ff; display: inline-block;
+            width: 1em; margin-left: -1em; text-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* ── Decorative Side Design ── */
+        .side-design {
+            position: fixed; top: 0; bottom: 0; width: 80px; z-index: 1000;
+            pointer-events: none; display: flex; flex-direction: column;
+            align-items: center; justify-content: space-around;
+        }
+        .side-design-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(138,43,226,0.15), transparent);
+            border-left: 4px solid rgba(138,43,226,0.8);
+            box-shadow: inset 15px 0 30px -10px rgba(138,43,226,0.3);
+        }
+        .side-design-right {
+            right: 0;
+            background: linear-gradient(to left, rgba(0,212,255,0.15), transparent);
+            border-right: 4px solid rgba(0,212,255,0.8);
+            box-shadow: inset -15px 0 30px -10px rgba(0,212,255,0.3);
+        }
+        .side-glow-line {
+            width: 2px; height: 100px; background: #fff; border-radius: 4px;
+            animation: pulse-line 3s infinite alternate ease-in-out;
+        }
+        .side-glow-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #fff;
+            animation: float-dot 4s infinite alternate ease-in-out;
+        }
+        .side-design-left .side-glow-line, .side-design-left .side-glow-dot {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+        .side-design-right .side-glow-line, .side-design-right .side-glow-dot {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+        @keyframes pulse-line {
+            0%   { opacity: 0.2; height: 50px; }
+            100% { opacity: 1;   height: 130px; }
+        }
+        @keyframes float-dot {
+            0%   { transform: translateY(15px) scale(0.8); opacity: 0.5; }
+            100% { transform: translateY(-15px) scale(1.2); opacity: 1; }
+        }
+
+        /* ── Edge & Corner Design ── */
+        .edge-design {
+            position: fixed; left: 0; right: 0; height: 50px; z-index: 1000;
+            pointer-events: none; display: flex; align-items: center; justify-content: center;
+        }
+        .edge-design-top {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(138,43,226,0.15), transparent);
+            border-top: 4px solid rgba(138,43,226,0.8);
+            box-shadow: inset 0 15px 30px -10px rgba(138,43,226,0.3);
+        }
+        .edge-design-bottom {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,212,255,0.15), transparent);
+            border-bottom: 4px solid rgba(0,212,255,0.8);
+            box-shadow: inset 0 -15px 30px -10px rgba(0,212,255,0.3);
+        }
+        .edge-glow-line-h {
+            height: 2px; width: 150px; background: #fff; border-radius: 4px;
+            animation: sweep-line-h 4s infinite alternate ease-in-out;
+        }
+        .edge-design-top .edge-glow-line-h { box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2; }
+        .edge-design-bottom .edge-glow-line-h { box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff; }
+        @keyframes sweep-line-h {
+            0%   { transform: translateX(-40vw); opacity: 0.2; }
+            50%  { opacity: 1; }
+            100% { transform: translateX(40vw); opacity: 0.2; }
+        }
+
+        body {
+            background-color: #111;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .corner-design { position: fixed; width: 100px; height: 100px; z-index: 1000; pointer-events: none; }
+        .corner-top-left    { top: 35px; left: 35px; border-top: 4px solid #8a2be2; border-left: 4px solid #8a2be2; animation: corner-pulse-tl 4s infinite alternate ease-in-out; }
+        .corner-top-right   { top: 35px; right: 35px; border-top: 4px solid #00d4ff; border-right: 4px solid #00d4ff; animation: corner-pulse-tr 4s infinite alternate ease-in-out; }
+        .corner-bottom-left { bottom: 35px; left: 35px; border-bottom: 4px solid #8a2be2; border-left: 4px solid #8a2be2; animation: corner-pulse-bl 4s infinite alternate ease-in-out; }
+        .corner-bottom-right{ bottom: 35px; right: 35px; border-bottom: 4px solid #00d4ff; border-right: 4px solid #00d4ff; animation: corner-pulse-br 4s infinite alternate ease-in-out; }
+        .corner-design::before { content: ''; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+        .corner-top-left::before    { top: -6px; left: -6px; box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2; }
+        .corner-top-right::before   { top: -6px; right: -6px; box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        .corner-bottom-left::before { bottom: -6px; left: -6px; box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2; }
+        .corner-bottom-right::before{ bottom: -6px; right: -6px; box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        @keyframes corner-pulse-tl { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(-5px,-5px); opacity:1; } }
+        @keyframes corner-pulse-tr { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(5px,-5px); opacity:1; } }
+        @keyframes corner-pulse-bl { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(-5px,5px); opacity:1; } }
+        @keyframes corner-pulse-br { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(5px,5px); opacity:1; } }
+
+        /* ── Home Button ── */
+        .home-hub-btn {
+            position: absolute; top: 15px; left: 15px; z-index: 9999;
+            background: rgba(255,255,255,0.05); color: #cdd6f4; text-decoration: none;
+            padding: 7px 12px; border-radius: 8px; font-family: sans-serif; font-size: 13px;
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); transition: background 0.3s;
+        }
+        .home-hub-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* ── Content Boxes ── */
+        .info-box {
+            background: rgba(255,255,255,0.03);
+            padding: 14px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #89b4fa;
+            box-shadow: 0 4px 12px rgba(137,180,250,0.08);
+            text-align: left;
+            margin: 10px 0;
+            font-size: 0.82em;
+        }
+        .recap-box  { border-left-color: #a6e3a1; background: rgba(166,227,161,0.04); }
+        .warn-box   { border-left-color: #f38ba8; background: rgba(243,139,168,0.04); }
+        .tip-box    { border-left-color: #f9e2af; background: rgba(249,226,175,0.04); }
+        .boss-box   { border-left-color: #f38ba8; background: rgba(243,139,168,0.04); }
+
+        .reveal pre { 
+            box-shadow: 0 8px 18px rgba(0,0,0,0.5); border-radius: 8px;
+            border: 1px solid #313244; margin: 10px auto; font-size: 0.78em;
+        }
+        .reveal code { font-family: 'Fira Code', 'Courier New', monospace; line-height: 1.35; }
+
+        /* Keep controls centered */
+        .reveal .controls { right: auto !important; left: 50% !important; transform: translateX(-50%) !important; bottom: 20px !important; }
+
+        /* Two column layout helper */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+    </style>
+</head>
+
+<body>
+    <a href="../index.html" class="home-hub-btn">🏠 Home Hub</a>
+    <div class="edge-design edge-design-top"><div class="edge-glow-line-h"></div></div>
+    <div class="edge-design edge-design-bottom"><div class="edge-glow-line-h"></div></div>
+    <div class="corner-design corner-top-left"></div>
+    <div class="corner-design corner-top-right"></div>
+    <div class="corner-design corner-bottom-left"></div>
+    <div class="corner-design corner-bottom-right"></div>
+    <div class="side-design side-design-left">
+        <div class="side-glow-dot" style="animation-delay:0s;"></div>
+        <div class="side-glow-line" style="animation-delay:0.5s;"></div>
+        <div class="side-glow-dot" style="animation-delay:1s;"></div>
+    </div>
+    <div class="side-design side-design-right">
+        <div class="side-glow-dot" style="animation-delay:1s;"></div>
+        <div class="side-glow-line" style="animation-delay:0s;"></div>
+        <div class="side-glow-dot" style="animation-delay:0.5s;"></div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ── Slide 1: Title ── -->
+            <section>
+                <h1>Control Flow & Logic</h1>
+                <p style="color:#a6adc8; margin-top:10px;">Lecture 5 &nbsp;·&nbsp; Decision Making in JavaScript</p>
+            </section>
+
+            <!-- ── Recap 1 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 4 Recap &nbsp;1/6</h3>
+                <h2>User Input</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Which built-in function shows a popup box and returns whatever the user typed?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> <code>prompt("Message")</code> — it always returns a <strong>String</strong>.</p>
+                </div>
+            </section>
+
+            <!-- ── Recap 2 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 4 Recap &nbsp;2/6</h3>
+                <h2>Data Type of prompt()</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: A user types 42 into a prompt box. What is the data type of the returned value?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer: String!</strong> Even if the user types a number, <code>prompt()</code> always returns a string. Use <code>Number()</code> to convert.</p>
+                </div>
+            </section>
+
+            <!-- ── Recap 3 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 4 Recap &nbsp;3/6</h3>
+                <h2>The confirm() Dialog</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Which function shows an "OK / Cancel" popup and returns <code>true</code> or <code>false</code>?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> <code>confirm("Are you sure?")</code> — returns <code>true</code> for OK, <code>false</code> for Cancel.</p>
+                </div>
+            </section>
+
+            <!-- ── Recap 4 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 4 Recap &nbsp;4/6</h3>
+                <h2>Template Literals</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: How do you embed a variable inside a template literal (backtick string)?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> Use <code>${variableName}</code> &nbsp;—&nbsp; e.g. &nbsp;<code>`Hello, ${name}!`</code></p>
+                </div>
+            </section>
+
+            <!-- ── Recap 5 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 4 Recap &nbsp;5/6</h3>
+                <h2>String Methods</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Which method removes whitespace from both ends of a string? Which removes it from only the start?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Both ends →</strong> <code>.trim()</code></p>
+                    <p><strong>Start only →</strong> <code>.trimStart()</code></p>
+                </div>
+            </section>
+
+            <!-- ── Recap 6 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 4 Recap &nbsp;6/6</h3>
+                <h2>Random Integer</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Write the code to generate a random integer between 1 and 10 (inclusive).</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><code>Math.floor(Math.random() * 10) + 1;</code></p>
+                    <p style="color:#a6adc8; font-size:0.85em; margin-top:6px;"><code>Math.random()</code> gives 0–0.99… &nbsp;·&nbsp; multiply to scale &nbsp;·&nbsp; floor to get integer &nbsp;·&nbsp; +1 to start at 1.</p>
+                </div>
+            </section>
+
+            <!-- ── Comparison Operators ── -->
+            <section>
+                <h3 style="color:#89b4fa;">Operators</h3>
+                <h2>Comparison (Equality)</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>Comparison operators always return a <strong>Boolean</strong>. JS has two equality operators:</p>
+                    <ul style="margin-top:6px;">
+                        <li><code>==</code> &nbsp;<strong>Loose equality</strong> — only checks value, converts types automatically.</li>
+                        <li><code>===</code> &nbsp;<strong>Strict equality</strong> — checks value AND type. <em>Use this always!</em></li>
+                        <li><code>!=</code> / <code>!==</code> &nbsp;— loose / strict inequality.</li>
+                    </ul>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+console.log(5 == "5");   // true  — string coerced to number
+console.log(5 === "5");  // false — number !== string
+
+console.log(0 == false); // true  — both coerce to 0
+console.log(0 === false);// false — different types
+                </code></pre>
+            </section>
+
+            <!-- ── Relational Operators ── -->
+            <section>
+                <h3 style="color:#89b4fa;">Operators</h3>
+                <h2>Relational Operators</h2>
+                <div class="two-col">
+                    <div class="info-box" style="margin:0;">
+                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Numeric comparison</p>
+                        <ul>
+                            <li><code>&gt;</code>  Greater than</li>
+                            <li><code>&lt;</code>  Less than</li>
+                            <li><code>&gt;=</code> Greater or equal</li>
+                            <li><code>&lt;=</code> Less or equal</li>
+                        </ul>
+                    </div>
+                    <div class="info-box" style="margin:0; border-left-color:#a6e3a1;">
+                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">String comparison</p>
+                        <p style="font-size:0.9em;">Compared alphabetically by Unicode value, character by character.</p>
+                        <p><code>"B" &gt; "A"</code> → <code>true</code></p>
+                    </div>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let age = 18;
+console.log(age > 18);    // false (not strictly greater)
+console.log(age >= 18);   // true
+console.log("b" > "a");   // true  (Unicode: b=98 > a=97)
+                </code></pre>
+            </section>
+
+            <!-- ── Logical Operators ── -->
+            <section>
+                <h3 style="color:#89b4fa;">Operators</h3>
+                <h2>Logical Operators</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <ul>
+                        <li><code>&&</code> <strong>AND</strong> — <code>true</code> only when <em>all</em> conditions are true.</li>
+                        <li><code>||</code> <strong>OR</strong> &nbsp; — <code>true</code> when <em>at least one</em> condition is true.</li>
+                        <li><code>!</code>  <strong>NOT</strong> — flips the boolean value.</li>
+                    </ul>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let hasTicket = true;
+let isVIP     = false;
+
+console.log(hasTicket && isVIP); // false — both needed for AND
+console.log(hasTicket || isVIP); // true  — one is enough for OR
+console.log(!hasTicket);         // false — NOT flips true → false
+
+// Real-world example: user must be 18+ AND have a valid ID
+let canEnter = age >= 18 && hasID;
+                </code></pre>
+            </section>
+
+            <!-- ── If / Else ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Control Flow</h3>
+                <h2>If / Else Statement</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>The most basic decision structure. If the condition is <code>true</code> → run Block A, otherwise → run Block B.</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let hour = 14; // 2 PM in 24-hour format
+
+if (hour < 12) {
+    console.log("Good Morning! ☀️");
+} else {
+    console.log("Good Afternoon! 🌤️");
+}
+
+// Output: Good Afternoon! 🌤️
+                </code></pre>
+                <div class="info-box tip-box" style="font-size:0.75em;">
+                    <p><strong>Tip:</strong> The curly braces <code>{}</code> are optional for single-line bodies, but always use them to avoid bugs!</p>
+                </div>
+            </section>
+
+            <!-- ── Else If ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Control Flow</h3>
+                <h2>Else If Ladder</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>Handles more than two possible outcomes. Conditions are checked <strong>top to bottom</strong> — the first <code>true</code> match wins, the rest are skipped.</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let score = 85;
+
+if (score >= 90) {
+    console.log("Grade: A ⭐");
+} else if (score >= 80) {
+    console.log("Grade: B 👍");   // ← This runs
+} else if (score >= 70) {
+    console.log("Grade: C");
+} else {
+    console.log("Grade: F ❌");
+}
+// Output: Grade: B 👍
+                </code></pre>
+            </section>
+
+            <!-- ── Nested If Else ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Control Flow</h3>
+                <h2>Nested If Else</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>An <code>if</code> statement placed inside another <code>if</code> block — used to check <strong>layered conditions</strong> (prerequisites).</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let age   = 21;
+let hasID = false;
+
+if (age >= 18) {            // OUTER: old enough?
+    if (hasID) {            // INNER: has valid ID?
+        console.log("Welcome to the club! 🎉");
+    } else {
+        console.log("You need your ID card! 🪪");
+    }
+} else {
+    console.log("You are too young to enter.");
+}
+// Output: You need your ID card! 🪪
+                </code></pre>
+            </section>
+
+            <!-- ── Switch ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Control Flow</h3>
+                <h2>Switch Statement</h2>
+                <div class="two-col" style="margin-bottom:8px;">
+                    <div class="info-box" style="margin:0; font-size:0.78em;">
+                        <p>A clean alternative to a long <code>else if</code> chain when matching one variable against <strong>exact values</strong>. Uses strict <code>===</code> internally.</p>
+                    </div>
+                    <div class="info-box warn-box" style="margin:0; font-size:0.78em;">
+                        <p><strong>⚠️ Warning:</strong> Always add <code>break</code>! Without it, execution "falls through" into the next case automatically.</p>
+                    </div>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let day = "Monday";
+
+switch (day) {
+    case "Monday":
+    case "Tuesday":
+        console.log("Start of the week 💪"); break;
+    case "Friday":
+        console.log("Almost weekend! 🎉");   break;
+    default:
+        console.log("Mid-week grind");
+}
+// Output: Start of the week 💪
+                </code></pre>
+            </section>
+
+            <!-- ── Ternary Operator ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Control Flow</h3>
+                <h2>Ternary Operator <code>? :</code></h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>The <strong>only</strong> JavaScript operator with three parts — a compact one-liner for simple <code>if/else</code> assignments.</p>
+                    <p style="text-align:center; font-family:monospace; color:#a6e3a1; margin-top:8px; font-size:1.05em;">
+                        condition &nbsp;<strong>?</strong>&nbsp; valueIfTrue &nbsp;<strong>:</strong>&nbsp; valueIfFalse
+                    </p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let age = 20;
+
+// ❌ Verbose: 5 lines
+let status;
+if (age >= 18) { status = "Adult"; }
+else           { status = "Minor"; }
+
+// ✅ Compact: 1 line with ternary
+let status = age >= 18 ? "Adult" : "Minor";
+
+console.log(status); // "Adult"
+                </code></pre>
+            </section>
+
+            <!-- ── DevTools ── -->
+            <section>
+                <h3 style="color:#f9e2af;">Developer Tools</h3>
+                <h2>Inspecting Variables</h2>
+                <div class="two-col">
+                    <div class="info-box" style="margin:0; font-size:0.78em;">
+                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Console Tab</p>
+                        <ul>
+                            <li>Type variable names directly into the console to see their current value.</li>
+                            <li><code>console.log()</code> for quick inspection.</li>
+                            <li><code>console.dir(obj)</code> to see all properties of an object.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box" style="margin:0; font-size:0.78em; border-left-color:#cba6f7;">
+                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Memory Tab (Heap Snapshot)</p>
+                        <ol style="list-style:decimal; padding-left:16px;">
+                            <li>Open DevTools (F12)</li>
+                            <li>Go to <strong>Memory</strong> tab</li>
+                            <li>Click <strong>Take snapshot</strong></li>
+                            <li>Search for your variable or object</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="info-box tip-box" style="margin-top:10px; font-size:0.75em;">
+                    <p><strong>💡 Note:</strong> JavaScript hides raw memory addresses (unlike C/C++ pointers). The heap snapshot shows object size, references, and garbage collection info instead.</p>
+                </div>
+            </section>
+
+            <!-- ── Challenge 1 ── -->
+            <section>
+                <h3 style="color:#f38ba8;">Boss Challenge &nbsp;1/3</h3>
+                <h2>The Truthy Trap</h2>
+                <div class="info-box boss-box" style="margin-bottom:8px;">
+                    <p>🧠 What gets logged? Think before you answer! (Hint: not all values behave like you expect inside <code>if</code>)</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+if ("0")  { console.log("A"); } else { console.log("B"); }
+if (0)    { console.log("C"); } else { console.log("D"); }
+if ("")   { console.log("E"); } else { console.log("F"); }
+if ([])   { console.log("G"); } else { console.log("H"); }
+                </code></pre>
+                <div class="fragment info-box" style="border-left-color:#a6e3a1; font-size:0.78em; margin-top:8px;">
+                    <p><strong>Answer: A, D, F, G</strong></p>
+                    <p><strong>Falsy values in JS:</strong> <code>0</code>, <code>""</code>, <code>null</code>, <code>undefined</code>, <code>NaN</code>, <code>false</code>. Everything else (including <code>"0"</code> and <code>[]</code>) is <strong>truthy</strong>!</p>
+                </div>
+            </section>
+
+            <!-- ── Challenge 2 ── -->
+            <section>
+                <h3 style="color:#f38ba8;">Boss Challenge &nbsp;2/3</h3>
+                <h2>The Missing Break</h2>
+                <div class="info-box boss-box" style="margin-bottom:8px;">
+                    <p>🧠 How many lines get logged to the console?</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let signal = "Yellow";
+
+switch (signal) {
+    case "Red":
+        console.log("Stop 🔴"); break;
+    case "Yellow":
+        console.log("Slow Down 🟡");
+        // ← no break here!
+    case "Green":
+        console.log("Go 🟢"); break;
+    default:
+        console.log("Invalid signal");
+}
+                </code></pre>
+                <div class="fragment info-box" style="border-left-color:#a6e3a1; font-size:0.78em; margin-top:8px;">
+                    <p><strong>Answer: 2 lines</strong> — "Slow Down 🟡" and "Go 🟢". When <code>break</code> is missing, JavaScript <strong>falls through</strong> and executes the next case automatically!</p>
+                </div>
+            </section>
+
+            <!-- ── Challenge 3 ── -->
+            <section>
+                <h3 style="color:#f38ba8;">Boss Challenge &nbsp;3/3</h3>
+                <h2>Operator Precedence</h2>
+                <div class="info-box boss-box" style="margin-bottom:8px;">
+                    <p>🧠 What is the final value of each variable? No running the code — think it through!</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+let a = true || false && false;   // What is a?
+let b = (true || false) && false; // What is b?
+let c = !true || true;            // What is c?
+                </code></pre>
+                <div class="fragment info-box" style="border-left-color:#a6e3a1; font-size:0.78em; margin-top:8px;">
+                    <p><strong>a = true</strong> — <code>&&</code> runs first: <code>false&&false = false</code>, then <code>true||false = true</code></p>
+                    <p><strong>b = false</strong> — parentheses force <code>||</code> first: <code>true||false = true</code>, then <code>true&&false = false</code></p>
+                    <p><strong>c = true</strong> — <code>!</code> runs first: <code>!true = false</code>, then <code>false||true = true</code></p>
+                </div>
+            </section>
+
+            <!-- ── MEGA CHALLENGE ── -->
+            <section>
+                <h3 style="color:#f38ba8; letter-spacing:3px;">⚡ MEGA CHALLENGE — All 5 Lectures</h3>
+                <h2 style="font-size:1.3em !important;">Cinema Ticket System</h2>
+                <div class="info-box boss-box" style="font-size:0.72em; margin-bottom:8px;">
+                    <p>🎬 A cinema charges tickets based on age. Read the code below carefully, then predict <strong>every single line</strong> that gets logged. No running it!</p>
+                </div>
+                <pre style="font-size:0.62em !important;"><code class="language-javascript" data-trim>
+// Lectures 1 & 2: Variables & Data Types
+const cinema   = "StarPlex";
+let   rawAge   = "  17  ";          // user input from prompt()
+let   isStudent = true;
+
+// Lecture 3 & 4: Type conversion + String methods + Math
+let age    = Number(rawAge.trim()); // convert and clean
+let lucky  = Math.floor(Math.random() * 100) + 1;
+let label  = age >= 18 ? "Adult" : "Minor";   // Lecture 5: Ternary
+
+// Lecture 5: Logical operators + if/else chain
+let price;
+if (age < 5) {
+    price = 0;
+} else if (age < 13 || isStudent) {
+    price = 8;
+} else if (age >= 13 && age < 18) {
+    price = 12;
+} else {
+    price = 18;
+}
+
+// Lecture 5: Switch for concession stand
+let concession;
+switch (true) {
+    case price === 0:  concession = "Free popcorn! 🍿";  break;
+    case price <= 12:  concession = "50% off snacks 🥤"; break;
+    default:           concession = "Full price";
+}
+
+// Lecture 4: Template Literals
+console.log(`Welcome to ${cinema}!`);
+console.log(`Age: ${age} | Category: ${label}`);
+console.log(`Ticket price: $${price}`);
+console.log(`Concession: ${concession}`);
+console.log(`Lucky number: ${lucky}`);
+                </code></pre>
+                <div class="fragment info-box" style="border-left-color:#a6e3a1; font-size:0.68em; margin-top:6px;">
+                    <p><strong>Expected Output:</strong> &nbsp; Welcome to StarPlex! &nbsp;|&nbsp; Age: 17 | Category: Minor &nbsp;|&nbsp; Ticket price: $8 &nbsp;|&nbsp; Concession: 50% off snacks 🥤 &nbsp;|&nbsp; Lucky number: <em>(random 1–100)</em></p>
+                    <p style="margin-top:4px; color:#a6adc8;"><em>Why $8? Age 17 is &lt;18 but <code>isStudent = true</code>, so the <code>age &lt; 13 || isStudent</code> branch fires first!</em></p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            plugins: [ RevealHighlight ],
+            transition: 'slide',
+            width: 1280,
+            height: 720,
+            margin: 0.06,
+            minScale: 0.2,
+            maxScale: 2.0
+        });
+    </script>
+</body>
+</html>

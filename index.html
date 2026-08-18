@@ -103,6 +103,10 @@
         .card.c4::before { background-color: var(--accent-4); }
         .card.c4 h2 { color: var(--accent-4); }
 
+        .card.c5:hover { box-shadow: 0 10px 20px rgba(148, 226, 213, 0.2); border-color: #94e2d5; }
+        .card.c5::before { background-color: #94e2d5; }
+        .card.c5 h2 { color: #94e2d5; }
+
         .card.special {
             grid-column: 1 / -1; /* Spans across all columns */
             background: linear-gradient(145deg, #1e1e2e 0%, #2a2a3e 100%);
@@ -199,6 +203,16 @@
         <a href="03_Lecture_4/PPT.html" class="card c4">
             <h2>Lecture 4</h2>
             <p>Browser Interactions, String Mastery, and Advanced Math.</p>
+            <div class="card-footer">
+                <span>Open Presentation</span>
+                <span class="arrow">→</span>
+            </div>
+        </a>
+
+        <!-- Lecture 5 -->
+        <a href="04_Lecture_5/PPT.html" class="card c5">
+            <h2>Lecture 5</h2>
+            <p>Control Flow & Logic — Comparison Operators, Logical Operators, If/Else, Switch, Ternary, and DevTools.</p>
             <div class="card-footer">
                 <span>Open Presentation</span>
                 <span class="arrow">→</span>
