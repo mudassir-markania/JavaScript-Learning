@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript - Lecture 6: Recap & Challenge Review</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.min.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── Base typography ── */
+        .reveal {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+            letter-spacing: 0.3px;
+            font-size: 28px;
+        }
+
+        .reveal p, .reveal li {
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .reveal h1, .reveal h2, .reveal h3,
+        .reveal h4, .reveal h5, .reveal h6 {
+            text-transform: none;
+            font-family: 'Outfit', sans-serif !important;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.3em;
+        }
+
+        .reveal h1 { font-size: 2.4em !important; }
+        .reveal h2 { font-size: 1.6em !important; }
+        .reveal h3 { font-size: 0.9em !important; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.2em; }
+
+        /* Gradient headings */
+        .reveal h1 {
+            background: linear-gradient(45deg, #8a2be2, #00d4ff);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+        }
+        .reveal h2 {
+            background: linear-gradient(45deg, #00d4ff, #8a2be2);
+            -webkit-background-clip: text; background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Custom bullet points */
+        .reveal ul { list-style-type: none; }
+        .reveal ul li::before {
+            content: '▹'; color: #00d4ff; display: inline-block;
+            width: 1em; margin-left: -1em; text-shadow: 0 0 10px #00d4ff;
+        }
+
+        /* ── Decorative Side Design ── */
+        .side-design {
+            position: fixed; top: 0; bottom: 0; width: 80px; z-index: 1000;
+            pointer-events: none; display: flex; flex-direction: column;
+            align-items: center; justify-content: space-around;
+        }
+        .side-design-left {
+            left: 0;
+            background: linear-gradient(to right, rgba(138,43,226,0.15), transparent);
+            border-left: 4px solid rgba(138,43,226,0.8);
+            box-shadow: inset 15px 0 30px -10px rgba(138,43,226,0.3);
+        }
+        .side-design-right {
+            right: 0;
+            background: linear-gradient(to left, rgba(0,212,255,0.15), transparent);
+            border-right: 4px solid rgba(0,212,255,0.8);
+            box-shadow: inset -15px 0 30px -10px rgba(0,212,255,0.3);
+        }
+        .side-glow-line {
+            width: 2px; height: 100px; background: #fff; border-radius: 4px;
+            animation: pulse-line 3s infinite alternate ease-in-out;
+        }
+        .side-glow-dot {
+            width: 8px; height: 8px; border-radius: 50%; background: #fff;
+            animation: float-dot 4s infinite alternate ease-in-out;
+        }
+        .side-design-left .side-glow-line, .side-design-left .side-glow-dot {
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2;
+        }
+        .side-design-right .side-glow-line, .side-design-right .side-glow-dot {
+            box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff;
+        }
+        @keyframes pulse-line {
+            0%   { opacity: 0.2; height: 50px; }
+            100% { opacity: 1;   height: 130px; }
+        }
+        @keyframes float-dot {
+            0%   { transform: translateY(15px) scale(0.8); opacity: 0.5; }
+            100% { transform: translateY(-15px) scale(1.2); opacity: 1; }
+        }
+
+        /* ── Edge & Corner Design ── */
+        .edge-design {
+            position: fixed; left: 0; right: 0; height: 50px; z-index: 1000;
+            pointer-events: none; display: flex; align-items: center; justify-content: center;
+        }
+        .edge-design-top {
+            top: 0;
+            background: linear-gradient(to bottom, rgba(138,43,226,0.15), transparent);
+            border-top: 4px solid rgba(138,43,226,0.8);
+            box-shadow: inset 0 15px 30px -10px rgba(138,43,226,0.3);
+        }
+        .edge-design-bottom {
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0,212,255,0.15), transparent);
+            border-bottom: 4px solid rgba(0,212,255,0.8);
+            box-shadow: inset 0 -15px 30px -10px rgba(0,212,255,0.3);
+        }
+        .edge-glow-line-h {
+            height: 2px; width: 150px; background: #fff; border-radius: 4px;
+            animation: sweep-line-h 4s infinite alternate ease-in-out;
+        }
+        .edge-design-top .edge-glow-line-h { box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2, 0 0 30px #8a2be2; }
+        .edge-design-bottom .edge-glow-line-h { box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff, 0 0 30px #00d4ff; }
+        @keyframes sweep-line-h {
+            0%   { transform: translateX(-40vw); opacity: 0.2; }
+            50%  { opacity: 1; }
+            100% { transform: translateX(40vw); opacity: 0.2; }
+        }
+
+        body {
+            background-color: #111;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .corner-design { position: fixed; width: 100px; height: 100px; z-index: 1000; pointer-events: none; }
+        .corner-top-left    { top: 35px; left: 35px; border-top: 4px solid #8a2be2; border-left: 4px solid #8a2be2; animation: corner-pulse-tl 4s infinite alternate ease-in-out; }
+        .corner-top-right   { top: 35px; right: 35px; border-top: 4px solid #00d4ff; border-right: 4px solid #00d4ff; animation: corner-pulse-tr 4s infinite alternate ease-in-out; }
+        .corner-bottom-left { bottom: 35px; left: 35px; border-bottom: 4px solid #8a2be2; border-left: 4px solid #8a2be2; animation: corner-pulse-bl 4s infinite alternate ease-in-out; }
+        .corner-bottom-right{ bottom: 35px; right: 35px; border-bottom: 4px solid #00d4ff; border-right: 4px solid #00d4ff; animation: corner-pulse-br 4s infinite alternate ease-in-out; }
+        .corner-design::before { content: ''; position: absolute; width: 8px; height: 8px; background: #fff; border-radius: 50%; }
+        .corner-top-left::before    { top: -6px; left: -6px; box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2; }
+        .corner-top-right::before   { top: -6px; right: -6px; box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        .corner-bottom-left::before { bottom: -6px; left: -6px; box-shadow: 0 0 10px #8a2be2, 0 0 20px #8a2be2; }
+        .corner-bottom-right::before{ bottom: -6px; right: -6px; box-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        @keyframes corner-pulse-tl { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(-5px,-5px); opacity:1; } }
+        @keyframes corner-pulse-tr { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(5px,-5px); opacity:1; } }
+        @keyframes corner-pulse-bl { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(-5px,5px); opacity:1; } }
+        @keyframes corner-pulse-br { 0% { transform: scale(1) translate(0,0); opacity:0.7; } 100% { transform: scale(1.1) translate(5px,5px); opacity:1; } }
+
+        /* ── Home Button ── */
+        .home-hub-btn {
+            position: absolute; top: 15px; left: 15px; z-index: 9999;
+            background: rgba(255,255,255,0.05); color: #cdd6f4; text-decoration: none;
+            padding: 7px 12px; border-radius: 8px; font-family: sans-serif; font-size: 13px;
+            border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); transition: background 0.3s;
+        }
+        .home-hub-btn:hover { background: rgba(255,255,255,0.1); }
+
+        /* ── Content Boxes ── */
+        .info-box {
+            background: rgba(255,255,255,0.03);
+            padding: 14px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #89b4fa;
+            box-shadow: 0 4px 12px rgba(137,180,250,0.08);
+            text-align: left;
+            margin: 10px 0;
+            font-size: 0.82em;
+        }
+        .recap-box  { border-left-color: #a6e3a1; background: rgba(166,227,161,0.04); }
+        .warn-box   { border-left-color: #f38ba8; background: rgba(243,139,168,0.04); }
+        .tip-box    { border-left-color: #f9e2af; background: rgba(249,226,175,0.04); }
+        .boss-box   { border-left-color: #f38ba8; background: rgba(243,139,168,0.04); }
+
+        .reveal pre { 
+            box-shadow: 0 8px 18px rgba(0,0,0,0.5); border-radius: 8px;
+            border: 1px solid #313244; margin: 10px auto; font-size: 0.78em;
+        }
+        .reveal code { font-family: 'Fira Code', 'Courier New', monospace; line-height: 1.35; }
+
+        /* Keep controls centered */
+        .reveal .controls { right: auto !important; left: 50% !important; transform: translateX(-50%) !important; bottom: 20px !important; }
+
+        /* Scrollable pre for large code blocks */
+        .scrollable-pre {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* Two column layout helper */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 10px; }
+    </style>
+</head>
+
+<body>
+    <a href="../index.html" class="home-hub-btn">🏠 Home Hub</a>
+    <div class="edge-design edge-design-top"><div class="edge-glow-line-h"></div></div>
+    <div class="edge-design edge-design-bottom"><div class="edge-glow-line-h"></div></div>
+    <div class="corner-design corner-top-left"></div>
+    <div class="corner-design corner-top-right"></div>
+    <div class="corner-design corner-bottom-left"></div>
+    <div class="corner-design corner-bottom-right"></div>
+    <div class="side-design side-design-left">
+        <div class="side-glow-dot" style="animation-delay:0s;"></div>
+        <div class="side-glow-line" style="animation-delay:0.5s;"></div>
+        <div class="side-glow-dot" style="animation-delay:1s;"></div>
+    </div>
+    <div class="side-design side-design-right">
+        <div class="side-glow-dot" style="animation-delay:1s;"></div>
+        <div class="side-glow-line" style="animation-delay:0s;"></div>
+        <div class="side-glow-dot" style="animation-delay:0.5s;"></div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- ── Slide 1: Title ── -->
+            <section>
+                <h1>Recap & Challenge Review</h1>
+                <p style="color:#a6adc8; margin-top:10px;">Lecture 6 &nbsp;·&nbsp; Mastering Control Flow & Logic</p>
+            </section>
+
+            <!-- ── Recap 1 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 5 Recap &nbsp;1/6</h3>
+                <h2>Equality Operators</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: What is the main difference between <code>==</code> (loose equality) and <code>===</code> (strict equality)?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> <code>==</code> compares only values (performing type coercion if needed), while <code>===</code> compares both value AND data type. Always use <code>===</code>!</p>
+                </div>
+            </section>
+
+            <!-- ── Recap 2 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 5 Recap &nbsp;2/6</h3>
+                <h2>Logical Operators</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Which logical operator returns true ONLY if ALL conditions are true?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> The AND operator <code>&&</code>.</p>
+                </div>
+            </section>
+
+            <!-- ── Recap 3 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 5 Recap &nbsp;3/6</h3>
+                <h2>Ternary Operator</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Convert this simple if/else into a single line using the ternary operator: <code>if (age > 18) { type = "Adult"; } else { type = "Minor"; }</code></p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> <code>let type = age > 18 ? "Adult" : "Minor";</code></p>
+                </div>
+            </section>
+
+            <!-- ── Recap 4 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 5 Recap &nbsp;4/6</h3>
+                <h2>Switch Statement</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: What happens if you forget to include a <code>break</code> statement at the end of a <code>case</code> block?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> The code "falls through" and executes the next case(s) automatically, regardless of whether they match the condition.</p>
+                </div>
+            </section>
+
+            <!-- ── Recap 5 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 5 Recap &nbsp;5/6</h3>
+                <h2>Truthy and Falsy</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: Which of the following values are considered "falsy" in JavaScript? <code>0, "0", "", false, [], null</code></p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> <code>0, "", false, null</code>. The string <code>"0"</code> and empty array <code>[]</code> are truthy!</p>
+                </div>
+            </section>
+            
+            <!-- ── Recap 6 ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Lecture 5 Recap &nbsp;6/6</h3>
+                <h2>Else If Ladder</h2>
+                <div class="info-box recap-box">
+                    <p style="color:#f9e2af; font-weight:bold;">Q: In an <code>if / else if / else</code> chain, how many blocks can execute when multiple conditions are true?</p>
+                </div>
+                <div class="fragment info-box" style="border-left-color:#00d4ff;">
+                    <p><strong>Answer:</strong> Only ONE block! JavaScript executes the FIRST block where the condition evaluates to true and skips the rest of the chain.</p>
+                </div>
+            </section>
+
+            <!-- ── Challenge Review ── -->
+            <section>
+                <h3 style="color:#89b4fa;">Challenge Review</h3>
+                <h2>Online Movie Booking System</h2>
+                <pre class="scrollable-pre"><code class="language-javascript" data-trim>
+// ## Challenge: Online Movie Booking System 🎬
+
+// Create a **JavaScript Online Movie Booking System** that calculates the final ticket price and displays a complete booking summary.
+// You must use the concepts you have learned so far: **variables, primitive data types, string methods, type conversion, Math methods, arithmetic operators, comparison operators, logical operators, if/else-if/else, ternary operator, switch, and template literals.**
+
+// ### Given Data
+
+// Start with the following variables:
+
+// ```js
+// let customerName = "  Mudassir  ";
+// let rawAge = " 17 ";
+// let rawTickets = " 3 ";
+// let isStudent = true;
+// let isWeekend = true;
+// let isMember = false;
+// let movie = "Avengers: Endgame";
+// ```
+
+// Also create a variable for the **base ticket price**.
+
+// ---
+
+// ### Requirements
+
+// #### 1. Customer Information
+
+// * Remove unnecessary spaces from `customerName` using `.trim()`.
+// * Convert `rawAge` into a number.
+// * Convert `rawTickets` into a number.
+// * Generate a random **booking ID between 10000 and 99999** using the `Math` object.
+
+// ---
+
+// #### 2. Customer Category
+
+// Use a **ternary operator** to determine the customer's category:
+
+// * Age `18` or above → `"Adult"`
+// * Age below `18` → `"Minor"`
+
+// Store the result in a variable called `category`.
+
+// ---
+
+// #### 3. Base Ticket Price
+
+// Use an `if / else if / else` statement:
+
+// * Age below `5` → Free
+// * Age `5–12` → `$8`
+// * Age `13–17` → `$12`
+// * Age `18+` → `$18`
+
+// Store the result in `ticketPrice`.
+
+// ---
+
+// #### 4. Student Discount
+
+// If the customer is a student **AND** their age is between `13` and `25`, give them a **20% discount**.
+
+// Otherwise, there should be no student discount.
+
+// ---
+
+// #### 5. Weekend Charge
+
+// If it is a weekend **AND** the customer is an adult, add a **$3 weekend charge per ticket**.
+
+// Otherwise, there is no weekend charge.
+
+// ---
+
+// #### 6. Membership Discount
+
+// If the customer is a member **OR** the total number of tickets is `3` or more, give a **10% discount**.
+
+// Use the appropriate logical operator.
+
+// ---
+
+// #### 7. Calculate Total
+
+// Calculate:
+
+// * Base ticket cost
+// * Student discount
+// * Membership discount
+// * Weekend charges
+// * Final amount
+
+// Make sure the discounts and charges are calculated correctly based on the number of tickets.
+
+// ---
+
+// #### 8. Booking Type
+
+// Use a **ternary operator**:
+
+// * Tickets `>= 5` → `"Group Booking"`
+// * Otherwise → `"Regular Booking"`
+
+// ---
+
+// #### 9. Concession Offer
+
+// Use `switch(true)` to determine the concession offer:
+
+// * Final amount is `$0` → `"Free Popcorn 🍿"`
+// * Final amount is `<= $20` → `"50% Off Snacks 🥤"`
+// * Final amount is `<= $50` → `"Free Soft Drink 🥤"`
+// * Otherwise → `"No Concession"`
+
+// ---
+
+// #### 10. Booking Status
+
+// Use `if / else if / else`:
+
+// * Invalid age or tickets → `"Invalid Booking"`
+// * Tickets greater than `10` → `"Maximum 10 tickets allowed"`
+// * Final amount greater than `$100` → `"Premium Booking"`
+// * Otherwise → `"Booking Confirmed"`
+
+// ---
+
+// #### 11. Final Output
+
+// Using **template literals**, display a complete booking receipt containing:
+
+// ```text
+// ================================
+//        MOVIE BOOKING
+// ================================
+
+// Customer:
+// Movie:
+// Booking ID:
+// Age:
+// Category:
+// Tickets:
+// Booking Type:
+
+// Ticket Price:
+// Student Discount:
+// Membership Discount:
+// Weekend Charge:
+// Final Amount:
+
+// Concession:
+// Booking Status:
+
+// ================================
+// ```
+
+// ### Restrictions
+
+// Try to solve the entire problem using **only the concepts covered so far**. Do not use arrays, objects, functions, loops, or advanced methods yet.
+
+                </code></pre>
+            </section>
+
+            <!-- ── Challenge Solution ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Solution</h3>
+                <h2>Step-by-Step Implementation</h2>
+                <pre class="scrollable-pre"><code class="language-javascript" data-trim>
+// Given Variables
+let customerName = "  Mudassir  ";
+let rawAge = " 17 ";
+let rawTickets = " 3 ";
+let isStudent = true;
+let isWeekend = true;
+let isMember = false;
+let movie = "Avengers: Endgame";
+
+// 1. Customer Information
+customerName = customerName.trim();
+let age = Number(rawAge.trim());
+let tickets = Number(rawTickets.trim());
+let bookingID = Math.floor(Math.random() * 90000) + 10000;
+
+// 2. Customer Category
+let category = age >= 18 ? "Adult" : "Minor";
+
+// 3. Base Ticket Price
+let basePrice;
+if (age < 5) {
+    basePrice = 0;
+} else if (age <= 12) {
+    basePrice = 8;
+} else if (age <= 17) {
+    basePrice = 12;
+} else {
+    basePrice = 18;
+}
+let ticketPrice = basePrice * tickets;
+
+// 4. Student Discount
+let studentDiscount = 0;
+if (isStudent && age >= 13 && age <= 25) {
+    studentDiscount = ticketPrice * 0.20; // 20% off
+}
+
+// 5. Weekend Charge
+let weekendCharge = 0;
+if (isWeekend && category === "Adult") {
+    weekendCharge = 3 * tickets; // $3 per ticket
+}
+
+// 6. Membership Discount
+let memberDiscount = 0;
+if (isMember || tickets >= 3) {
+    memberDiscount = ticketPrice * 0.10; // 10% off
+}
+
+// 7. Calculate Total
+let finalAmount = ticketPrice - studentDiscount - memberDiscount + weekendCharge;
+
+// 8. Booking Type
+let bookingType = tickets >= 5 ? "Group Booking" : "Regular Booking";
+
+// 9. Concession Offer
+let concession;
+switch (true) {
+    case finalAmount === 0:
+        concession = "Free Popcorn 🍿";
+        break;
+    case finalAmount <= 20:
+        concession = "50% Off Snacks 🥤";
+        break;
+    case finalAmount <= 50:
+        concession = "Free Soft Drink 🥤";
+        break;
+    default:
+        concession = "No Concession";
+}
+
+// 10. Booking Status
+let status;
+if (age <= 0 || tickets <= 0) {
+    status = "Invalid Booking";
+} else if (tickets > 10) {
+    status = "Maximum 10 tickets allowed";
+} else if (finalAmount > 100) {
+    status = "Premium Booking";
+} else {
+    status = "Booking Confirmed";
+}
+
+// 11. Final Output
+console.log(`================================
+       MOVIE BOOKING
+================================
+
+Customer: ${customerName}
+Movie: ${movie}
+Booking ID: #${bookingID}
+Age: ${age}
+Category: ${category}
+Tickets: ${tickets}
+Booking Type: ${bookingType}
+
+Ticket Price: $${ticketPrice}
+Student Discount: -$${studentDiscount}
+Membership Discount: -$${memberDiscount}
+Weekend Charge: +$${weekendCharge}
+Final Amount: $${finalAmount}
+
+Concession: ${concession}
+Booking Status: ${status}
+
+================================`);
+                </code></pre>
+            </section>
+
+            <!-- ── Objects Introduction ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Non-Primitive Types</h3>
+                <h2>Introduction to Objects</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>So far, we've learned <strong>Primitive Types</strong> (Value Types) like Number, String, Boolean, Undefined, and Null. Now, we introduce the <strong>Non-Primitive Type</strong> (Reference Type):</p>
+                    <ul style="margin-top:6px;">
+                        <li>There is only ONE main non-primitive type in JavaScript: <strong>The Object</strong>.</li>
+                        <li>All other complex structures (like Arrays and Functions) are just special types of Objects behind the scenes!</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ── Object Literals ── -->
+            <section>
+                <h3 style="color:#cba6f7;">Object Literals</h3>
+                <h2>Creating an Object</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>We create an object using curly braces <code>{}</code>. Inside, we store data as <strong>Key-Value pairs</strong> separated by commas.</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+// Creating an empty object
+const emptyUser = {};
+
+// Creating an object with properties
+const user = {
+    firstName: "Akash",
+    lastName: "Singh",
+    age: 26,
+    city: "Bangalore"
+};
+                </code></pre>
+            </section>
+
+            <!-- ── Accessing Data ── -->
+            <section>
+                <h3 style="color:#89b4fa;">Working with Objects</h3>
+                <h2>Accessing & Updating Values</h2>
+                <div class="two-col" style="margin-bottom:8px;">
+                    <div class="info-box" style="margin:0; font-size:0.75em;">
+                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Dot Notation</p>
+                        <p>The most common and simple way to access or update properties.</p>
+                    </div>
+                    <div class="info-box" style="margin:0; font-size:0.75em; border-left-color:#a6e3a1;">
+                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Bracket Notation</p>
+                        <p>Used when keys have spaces/dashes or when using variables as keys.</p>
+                    </div>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+// 1. Dot Notation
+console.log(user.firstName); // "Akash"
+user.age = 27;               // Updating a value
+
+// 2. Bracket Notation (keys are actually strings behind the scenes!)
+console.log(user["lastName"]); // "Singh"
+user["is-student"] = true;     // Dash requires quotes/brackets!
+
+// 3. Using a variable as a key
+let myKey = "city";
+console.log(user[myKey]);    // "Bangalore"
+                </code></pre>
+            </section>
+
+            <!-- ── Reference Types & Memory ── -->
+            <section>
+                <h3 style="color:#f38ba8;">Behind the Scenes</h3>
+                <h2>Reference Types in Memory</h2>
+                <div class="info-box warn-box" style="margin-bottom:8px;">
+                    <p><strong>Crucial Concept:</strong> Objects are <em>Reference Types</em>. Variables don't hold the actual object; they hold the <strong>Memory Address</strong> pointing to where the object lives in RAM!</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+const user1 = {};
+const user2 = {};
+
+// Why is this false?
+console.log(user1 === user2); // false!
+
+// Because user1 points to Memory Address #218573
+// And user2 points to Memory Address #218575
+// JavaScript compares their ADDRESSES, not their contents!
+                </code></pre>
+            </section>
+
+            <!-- ── Nested Objects ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Advanced Objects</h3>
+                <h2>Nested Objects</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>An object's value can be <em>another</em> object! In memory, this just creates a chain of addresses linking the objects together.</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+const user = {
+    firstName: "Adarsh",
+    address: {
+        city: "Bangalore",
+        state: "Karnataka",
+        moreDetails: {
+            weather: "Nice",
+            population: "13 Million"
+        }
+    }
+};
+
+// Accessing deeply nested data
+console.log(user.address.moreDetails.weather); // "Nice"
+                </code></pre>
+            </section>
+
+            <!-- ── Const Objects ── -->
+            <section>
+                <h3 style="color:#f9e2af;">Object Mutation</h3>
+                <h2>The <code>const</code> Mystery</h2>
+                <div class="info-box warn-box" style="margin-bottom:8px;">
+                    <p><strong>Question:</strong> Can we change an object declared with <code>const</code>? <br/><strong>Answer:</strong> YES! But why?</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+const user = { name: "Anurag", age: 25 };
+
+// We CAN modify, add, or delete properties:
+user.mobileNumber = 1234567890; 
+user.name = "Rahul"; 
+// ✅ This works perfectly!
+
+// We CANNOT reassign the entire variable:
+user = { name: "Adarsh" }; 
+// ❌ ERROR! Assignment to constant variable.
+                </code></pre>
+                <div class="info-box tip-box" style="margin-top:10px; font-size:0.75em;">
+                    <p><strong>💡 Why?</strong> <code>const</code> only locks the <strong>Memory Address</strong> the variable points to. It does NOT lock the contents inside that address!</p>
+                </div>
+            </section>
+
+            <!-- ── Object.seal() ── -->
+            <section>
+                <h3 style="color:#89b4fa;">Protecting Objects</h3>
+                <h2><code>Object.seal()</code></h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>What if you want to allow modifying existing properties, but <strong>prevent</strong> anyone from adding new ones or deleting them?</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+const user = { name: "Anurag", age: 25 };
+
+Object.seal(user); // 🔒 The object is now sealed!
+
+// Modifying existing properties works:
+user.name = "Rahul"; // ✅ Success! Name is updated.
+
+// Adding or deleting properties fails:
+user.isGraduate = true; // ❌ Ignored (or Error in strict mode)
+delete user.age;        // ❌ Ignored
+                </code></pre>
+            </section>
+
+            <!-- ── Object.freeze() ── -->
+            <section>
+                <h3 style="color:#a6e3a1;">Ultimate Protection</h3>
+                <h2><code>Object.freeze()</code></h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>What if you want an object to be <strong>completely immutable</strong>? No changes, no additions, no deletions.</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+const user = { name: "Anurag", age: 25 };
+
+Object.freeze(user); // 🧊 The object is frozen!
+
+// EVERYTHING fails (ignored or Error in strict mode):
+user.name = "Rahul";    // ❌ Cannot modify
+user.city = "Delhi";    // ❌ Cannot add
+delete user.age;        // ❌ Cannot delete
+
+console.log(user); // Stays exactly { name: "Anurag", age: 25 }
+                </code></pre>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            plugins: [ RevealHighlight ],
+            transition: 'slide',
+            width: 1280,
+            height: 720,
+            margin: 0.06,
+            minScale: 0.2,
+            maxScale: 2.0
+        });
+    </script>
+</body>
+</html>

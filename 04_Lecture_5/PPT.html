@@ -491,31 +491,72 @@ console.log(status); // "Adult"
                 </code></pre>
             </section>
 
-            <!-- ── DevTools ── -->
+            <!-- ── DevTools 1: Console ── -->
             <section>
-                <h3 style="color:#f9e2af;">Developer Tools</h3>
-                <h2>Inspecting Variables</h2>
+                <h3 style="color:#f9e2af;">Developer Tools (1/3)</h3>
+                <h2>The Console Tab</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>The console is your live connection to the JavaScript engine. Use it to inspect data on the fly:</p>
+                </div>
                 <div class="two-col">
-                    <div class="info-box" style="margin:0; font-size:0.78em;">
-                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Console Tab</p>
+                    <div class="info-box" style="margin:0; font-size:0.75em; border-left-color:#89b4fa;">
+                        <p style="font-weight:bold; color:#89b4fa; margin-bottom:6px;">Common Commands</p>
                         <ul>
-                            <li>Type variable names directly into the console to see their current value.</li>
-                            <li><code>console.log()</code> for quick inspection.</li>
-                            <li><code>console.dir(obj)</code> to see all properties of an object.</li>
+                            <li><code>console.log(variable)</code> - Prints the value.</li>
+                            <li><code>console.dir(object)</code> - Shows interactive properties of an object.</li>
+                            <li><code>console.table(data)</code> - Displays arrays/objects as a neat table.</li>
                         </ul>
                     </div>
-                    <div class="info-box" style="margin:0; font-size:0.78em; border-left-color:#cba6f7;">
-                        <p style="font-weight:bold; color:#f9e2af; margin-bottom:6px;">Memory Tab (Heap Snapshot)</p>
-                        <ol style="list-style:decimal; padding-left:16px;">
-                            <li>Open DevTools (F12)</li>
-                            <li>Go to <strong>Memory</strong> tab</li>
-                            <li>Click <strong>Take snapshot</strong></li>
-                            <li>Search for your variable or object</li>
-                        </ol>
+                    <div class="info-box" style="margin:0; font-size:0.75em; border-left-color:#a6e3a1;">
+                        <p style="font-weight:bold; color:#a6e3a1; margin-bottom:6px;">Live Interaction</p>
+                        <p>You can directly type JavaScript into the console (like <code>5 + 5</code> or checking <code>typeof age</code>) and hit Enter to instantly evaluate it without changing your code!</p>
                     </div>
                 </div>
-                <div class="info-box tip-box" style="margin-top:10px; font-size:0.75em;">
-                    <p><strong>💡 Note:</strong> JavaScript hides raw memory addresses (unlike C/C++ pointers). The heap snapshot shows object size, references, and garbage collection info instead.</p>
+            </section>
+
+            <!-- ── DevTools 2: Memory Tab ── -->
+            <section>
+                <h3 style="color:#f9e2af;">Developer Tools (2/3)</h3>
+                <h2>The Memory Tab & Heap Snapshots</h2>
+                <div class="info-box tip-box" style="margin-bottom:8px; font-size:0.75em;">
+                    <p><strong>💡 How memory works:</strong> Primitive types (like numbers) are simple, but complex structures (like strings and objects) are stored in the "Heap". We can peek into this memory!</p>
+                </div>
+                <div class="two-col">
+                    <div class="info-box" style="margin:0; font-size:0.75em; border-left-color:#cba6f7;">
+                        <p style="font-weight:bold; color:#cba6f7; margin-bottom:6px;">How to take a snapshot:</p>
+                        <ol style="list-style:decimal; padding-left:16px;">
+                            <li>Open DevTools (F12 or Right Click -> Inspect).</li>
+                            <li>Navigate to the <strong>Memory</strong> tab.</li>
+                            <li>Select <strong>Heap snapshot</strong>.</li>
+                            <li>Click the <strong>Take snapshot</strong> button.</li>
+                        </ol>
+                    </div>
+                    <div class="info-box" style="margin:0; font-size:0.75em; border-left-color:#f38ba8;">
+                        <p style="font-weight:bold; color:#f38ba8; margin-bottom:6px;">What you will see:</p>
+                        <p>A massive list of every string, function, and object currently loaded in your browser's RAM, along with their unique <code>@ID</code> memory addresses!</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ── DevTools 3: Live Preview ── -->
+            <section>
+                <h3 style="color:#f9e2af;">Developer Tools (3/3)</h3>
+                <h2>Live Preview: Inspecting Addresses</h2>
+                <div class="info-box" style="margin-bottom:8px;">
+                    <p>Let's find exactly where a variable lives in your computer's RAM right now!</p>
+                </div>
+                <pre><code class="language-javascript" data-trim>
+// 1. Create a variable in your code
+let mySecretName = "Batman12345";
+                </code></pre>
+                <div class="info-box tip-box" style="margin-top:10px; font-size:0.75em; border-left-color:#a6e3a1;">
+                    <p style="font-weight:bold; color:#a6e3a1; margin-bottom:6px;">Live Demo Steps:</p>
+                    <ol style="list-style:decimal; padding-left:16px;">
+                        <li>Take a Heap Snapshot in the Memory Tab.</li>
+                        <li>Use the search bar (`Ctrl+F` or `Cmd+F`) and type <code>"Batman12345"</code>.</li>
+                        <li>Look under the <strong>String</strong> category. You will see your string next to an ID like <code>@218573</code>.</li>
+                        <li>Expand the dropdown to see the <strong>Context</strong> — this shows the exact variable holding this address!</li>
+                    </ol>
                 </div>
             </section>
 
